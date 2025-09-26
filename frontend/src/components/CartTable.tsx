@@ -19,8 +19,8 @@ export default function CartTable(
                     className="border rounded px-2 py-1 w-full"
                     value={i.cantidad} onChange={e=>onQty(i.id_producto, Number(e.target.value))}/>
                 </td>
-                <td className="p-2">$ {i.precio.toFixed(2)}</td>
-                <td className="p-2">$ {(i.precio*i.cantidad).toFixed(2)}</td>
+                <td className="p-2">Q {i.precio.toFixed(2)}</td>
+                <td className="p-2">Q {(i.precio * i.cantidad).toFixed(2)}</td>
                 <td className="p-2 text-right">
                     <button className="text-red-600" onClick={()=>onRemove(i.id_producto)}>Quitar</button>
                 </td>
