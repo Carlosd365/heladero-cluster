@@ -24,8 +24,14 @@ export const crearVenta = async (req: Request, res: Response) => {
 };
 
 export const agregarDetalle = async (req: Request, res: Response) => {
-  const venta = await VentasService.agregarDetalle(Number(req.params.id), req.body);
-  res.status(201).json(venta);
+  try {
+    const venta = await VentasService.agregarDetalle(Number(req.params.id), req.body);
+    res.status(201).json(venta);
+  } catch (err: any) {
+    const msg = String(err?.message || err);
+    const code = msg.includes("Stock insuficiente") ? 409 : 400;
+    res.status(code).json({ message: msg });
+  }
 };
 
 export const eliminarDetalle = async (req: Request, res: Response) => {
@@ -37,8 +43,14 @@ export const eliminarDetalle = async (req: Request, res: Response) => {
 };
 
 export const pagar = async (req: Request, res: Response) => {
-  const venta = await VentasService.pagar(Number(req.params.id));
-  res.json(venta);
+  try {
+    const v = await VentasService.pagar(Number(req.params.id));
+    res.json(v);
+  } catch (e:any) {
+    const msg = e?.message || "Error al pagar";
+    const code = msg.includes("No hay detalles") ? 409 : 500;
+    res.status(code).json({ message: msg });
+  }
 };
 
 export const anular = async (req: Request, res: Response) => {

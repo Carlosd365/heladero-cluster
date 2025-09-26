@@ -9,10 +9,29 @@ export type Producto = {
 };
 
 export const ProductosService = {
-  async list() {
-    const [rows] = await db.query("SELECT * FROM productos ORDER BY id_producto DESC");
-    return rows as any[];
-  },
+  async list(search = "", activo?: number) {
+  let sql = "SELECT * FROM productos";
+  const params: any[] = [];
+
+  const conditions: string[] = [];
+  if (search) {
+    conditions.push("(nombre LIKE ?)");
+    params.push(`%${search}%`);
+  }
+  if (typeof activo === "number") {
+    conditions.push("activo = ?");
+    params.push(activo);
+  }
+
+  if (conditions.length) {
+    sql += " WHERE " + conditions.join(" AND ");
+  }
+
+  sql += " ORDER BY id_producto DESC";
+
+  const [rows] = await db.query(sql, params);
+  return rows as any[];
+},
 
   async get(id: number) {
     const [rows] = await db.query("SELECT * FROM productos WHERE id_producto = ?", [id]);
@@ -36,7 +55,6 @@ export const ProductosService = {
     for (const f of fields) {
       if (f in data) {
         sets.push(`${f} = ?`);
-        // @ts-ignore
         vals.push(data[f]);
       }
     }

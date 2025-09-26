@@ -9,8 +9,18 @@ export type Cliente = {
 };
 
 export const ClientesService = {
-  async list() {
-    const [rows] = await db.query("SELECT * FROM clientes ORDER BY id_cliente DESC");
+  async list(search = "") {
+    let sql = "SELECT * FROM clientes";
+    const params: any[] = [];
+
+    if (search) {
+      sql += " WHERE nombres LIKE ? OR apellidos LIKE ?";
+      params.push(`%${search}%`, `%${search}%`);
+    }
+
+    sql += " ORDER BY id_cliente DESC";
+
+    const [rows] = await db.query(sql, params);
     return rows as any[];
   },
 
@@ -36,7 +46,6 @@ export const ClientesService = {
     for (const f of fields) {
       if (f in data) {
         sets.push(`${f} = ?`);
-        // @ts-ignore
         vals.push(data[f]);
       }
     }

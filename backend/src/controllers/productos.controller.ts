@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import { ProductosService } from "../services/productos.service";
 
-export const list = async (_req: Request, res: Response) => {
+export const list = async (req: Request, res: Response) => {
   try {
-    console.log("📥 [Productos] Listando productos...");
-    const data = await ProductosService.list();
-    console.log("✅ [Productos] Total productos:", data.length);
+    const search = String(req.query.search ?? "").trim();
+    const activo = req.query.activo;
+    const filtroActivo =
+      typeof activo === "string" ? Number(activo) : undefined; // 0 | 1
+
+    const data = await ProductosService.list(search, filtroActivo);
     res.json(data);
-  } catch (error) {
-    console.error("❌ [Productos] Error al listar:", error);
+  } catch {
     res.status(500).json({ error: "Error al obtener productos" });
   }
 };

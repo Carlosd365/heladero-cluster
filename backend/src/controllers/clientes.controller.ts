@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import { ClientesService } from "../services/clientes.service";
 
-export const list = async (_req: Request, res: Response) => {
+export const list = async (req: Request, res: Response) => {
   try {
-    console.log("📥 [Clientes] Listando clientes...");
-    const data = await ClientesService.list();
-    console.log("✅ [Clientes] Listado con éxito, total:", data.length);
+    const search = String(req.query.search ?? "").trim();
+    const data = await ClientesService.list(search);
     res.json(data);
-  } catch (error) {
-    console.error("❌ [Clientes] Error al listar:", error);
+  } catch {
     res.status(500).json({ error: "Error al obtener clientes" });
   }
 };
+
 
 export const get = async (req: Request, res: Response) => {
   try {
