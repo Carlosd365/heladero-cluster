@@ -1,7 +1,7 @@
-// src/pages/NuevoProducto.tsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { repo } from "../lib/repo";
+import { repo } from "../../lib/repo";
+import "./NuevoProducto.css";
 
 export default function NuevoProducto() {
   const [nombre, setNombre] = useState("");
@@ -40,17 +40,17 @@ export default function NuevoProducto() {
   };
 
   return (
-    <section className="grid gap-4 max-w-xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Nuevo producto</h1>
-        <Link to="/productos" className="text-sm underline">Volver</Link>
+    <section className="nuevo-producto">
+      <div className="nuevo-producto-header">
+        <h1 className="nuevo-producto-titulo">Nuevo producto</h1>
+        <Link to="/productos" className="nuevo-producto-volver">Volver</Link>
       </div>
 
-      <form onSubmit={onSubmit} className="grid gap-3">
-        <div className="grid">
-          <label className="text-sm text-gray-600">Nombre</label>
+      <form onSubmit={onSubmit} className="nuevo-producto-form">
+        <div className="nuevo-producto-campo">
+          <label className="nuevo-producto-label">Nombre</label>
           <input
-            className="border rounded px-3 py-2"
+            className="nuevo-producto-input"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             placeholder="Ej. Bola de Vainilla"
@@ -58,26 +58,26 @@ export default function NuevoProducto() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="grid">
-            <label className="text-sm text-gray-600">Precio</label>
+        <div className="nuevo-producto-grid">
+          <div className="nuevo-producto-campo">
+            <label className="nuevo-producto-label">Precio</label>
             <input
               type="number"
               step="0.01"
               min="0"
-              className="border rounded px-3 py-2"
+              className="nuevo-producto-input"
               value={precio}
               onChange={(e) => setPrecio(e.target.value)}
               placeholder="0.00"
             />
           </div>
-          <div className="grid">
-            <label className="text-sm text-gray-600">Stock</label>
+          <div className="nuevo-producto-campo">
+            <label className="nuevo-producto-label">Stock</label>
             <input
               type="number"
               step="1"
               min="0"
-              className="border rounded px-3 py-2"
+              className="nuevo-producto-input"
               value={stock}
               onChange={(e) => setStock(e.target.value)}
               placeholder="0"
@@ -85,7 +85,7 @@ export default function NuevoProducto() {
           </div>
         </div>
 
-        <label className="inline-flex items-center gap-2">
+        <label className="nuevo-producto-check">
           <input
             type="checkbox"
             checked={activo}
@@ -94,17 +94,17 @@ export default function NuevoProducto() {
           <span>Activo</span>
         </label>
 
-        <div className="flex gap-2">
+        <div className="nuevo-producto-botones">
           <button
             type="submit"
-            className="px-4 py-2 rounded bg-black text-white disabled:opacity-60"
+            className="nuevo-producto-guardar"
             disabled={saving}
           >
             {saving ? "Guardando..." : "Guardar"}
           </button>
           <button
             type="button"
-            className="px-4 py-2 rounded border"
+            className="nuevo-producto-cancelar"
             onClick={() => nav("/productos")}
             disabled={saving}
           >

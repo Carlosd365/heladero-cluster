@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Shell from "../layout/Shell";
-import Dashboard from "../pages/Dashboard";
-import Clientes from "../pages/Clientes";
-import Productos from "../pages/Productos";
-import Ventas from "../pages/Ventas";
-import NuevaVenta from "../pages/NuevaVenta";
-import NuevoProducto from "../pages/NuevoProducto";
-import NuevoCliente from "../pages/NuevoCliente";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import Clientes from "../pages/Clientes/Clientes";
+import Productos from "../pages/Productos/Productos";
+import Ventas from "../pages/Ventas/Ventas";
+import NuevaVenta from "../pages/NuevaVenta/NuevaVenta";
+import NuevoProducto from "../pages/NuevoProducto/NuevoProducto";
+import NuevoCliente from "../pages/NuevoCliente/NuevoCliente";
 
 const router = createBrowserRouter([
     {

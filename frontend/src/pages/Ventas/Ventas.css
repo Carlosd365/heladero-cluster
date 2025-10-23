@@ -1,0 +1,100 @@
+.ventas {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.ventas-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.ventas-campo {
+    display: grid;
+}
+
+.ventas-label {
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.ventas-input {
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.ventas-actualizar {
+    margin-left: auto;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    border: 1px solid #d1d5db;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.ventas-actualizar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.ventas-nueva {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.ventas-nueva:hover {
+    opacity: 0.9;
+}
+
+.ventas-tabla-contenedor {
+    overflow: auto;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    background-color: #fff;
+}
+
+.ventas-tabla {
+    width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+}
+
+.ventas-tabla thead {
+    background-color: #f3f4f6;
+}
+
+.ventas-tabla th,
+.ventas-tabla td {
+    padding: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.ventas-row:hover {
+    background-color: #f9fafb;
+}
+
+.ventas-sin-datos {
+    padding: 1rem;
+    text-align: center;
+    color: #6b7280;
+}
+
+.ventas-cargando {
+    padding: 1rem;
+    text-align: center;
+    color: #9ca3af;
+}

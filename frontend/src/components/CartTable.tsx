@@ -29,7 +29,7 @@ export default function CartTable(
             {!items.length && <tr><td className="p-4 text-center text-gray-500" colSpan={5}>Agrega productos</td></tr>}
             </tbody>
         </table>
-        <div className="text-right font-semibold">Subtotal: $ {subtotal.toFixed(2)}</div>
+        <div className="text-right font-semibold">Subtotal: Q {subtotal.toFixed(2)}</div>
         </div>
     );
 }

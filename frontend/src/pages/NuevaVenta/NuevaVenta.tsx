@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { repo, type Cliente, type CrearVentaPayload } from "../lib/repo";
-import Autocomplete from "../components/Autocomplete";
-import CartTable from "../components/CartTable";
-import type { CartItem } from "../components/CartTable";
-
+import { repo, type Cliente, type CrearVentaPayload } from "../../lib/repo";
+import Autocomplete from "../../components/Autocomplete";
+import CartTable from "../../components/CartTable";
+import type { CartItem } from "../../components/CartTable";
+import "./NuevaVenta.css";
 
 type MetodoPago = NonNullable<CrearVentaPayload["metodo_pago"]>;
 
@@ -22,11 +22,7 @@ export default function NuevaVenta() {
   const nav = useNavigate();
 
   const subtotal = useMemo(
-    () =>
-      items.reduce(
-        (s, i) => s + Number(i.precio) * Number(i.cantidad),
-        0
-      ),
+    () => items.reduce((s, i) => s + Number(i.precio) * Number(i.cantidad), 0),
     [items]
   );
 
@@ -34,14 +30,9 @@ export default function NuevaVenta() {
     setItems((prev) => {
       const found = prev.find((x) => x.id_producto === p.id_producto);
       if (found) {
-        const nuevaCant = Math.min(
-          found.cantidad + 1,
-          Number(p.stock ?? Infinity)
-        );
+        const nuevaCant = Math.min(found.cantidad + 1, Number(p.stock ?? Infinity));
         return prev.map((x) =>
-          x.id_producto === p.id_producto
-            ? { ...x, cantidad: nuevaCant }
-            : x
+          x.id_producto === p.id_producto ? { ...x, cantidad: nuevaCant } : x
         );
       }
       return [
@@ -61,10 +52,7 @@ export default function NuevaVenta() {
     setItems((prev) =>
       prev.map((x) =>
         x.id_producto === id
-          ? {
-              ...x,
-              cantidad: Math.max(1, Math.min(qty, x.stock || qty)),
-            }
+          ? { ...x, cantidad: Math.max(1, Math.min(qty, x.stock || qty)) }
           : x
       )
     );
@@ -75,21 +63,17 @@ export default function NuevaVenta() {
   const confirmar = async () => {
     if (!cliente) return alert("Selecciona un cliente.");
     if (!items.length) return alert("Agrega al menos un producto.");
-    if (items.some((i) => i.cantidad <= 0))
-      return alert("Hay cantidades inválidas.");
+    if (items.some((i) => i.cantidad <= 0)) return alert("Hay cantidades inválidas.");
     if (items.some((i) => i.stock && i.cantidad > i.stock))
       return alert("Una o más cantidades superan el stock disponible.");
 
     try {
       setSaving(true);
-
-      // 1) Crear la venta
       const { id_venta } = await repo.crearVenta({
         id_cliente: cliente.id_cliente,
         metodo_pago: metodo,
       });
 
-      // 2) Agregar cada detalle
       await Promise.all(
         items.map((i) =>
           repo.agregarDetalleVenta(id_venta, {
@@ -104,18 +88,16 @@ export default function NuevaVenta() {
       nav("/ventas");
     } catch (e: any) {
       console.error(e);
-      alert(
-        e?.response?.data?.message ?? "No se pudo crear la venta"
-      );
+      alert(e?.response?.data?.message ?? "No se pudo crear la venta");
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <section className="grid gap-4">
-      <div className="flex gap-3 items-center">
-        <label className="text-sm text-gray-600">Cliente</label>
+    <section className="nueva-venta">
+      <div className="nueva-venta-header">
+        <label className="nueva-venta-label">Cliente</label>
 
         <Autocomplete
           fetcher={(q) => repo.clientes(q)}
@@ -124,17 +106,17 @@ export default function NuevaVenta() {
         />
 
         {cliente && (
-          <span className="px-2 py-1 bg-gray-200 rounded text-sm">
+          <span className="nueva-venta-cliente">
             {cliente.nombres} {cliente.apellidos ?? ""}
           </span>
         )}
 
-        <div className="ml-auto flex gap-2 items-center">
-          <label className="text-sm text-gray-600">Método</label>
+        <div className="nueva-venta-metodo">
+          <label className="nueva-venta-label">Método</label>
           <select
             value={metodo}
             onChange={(e) => setMetodo(e.target.value as MetodoPago)}
-            className="border rounded px-2 py-1"
+            className="nueva-venta-select"
           >
             <option value="EFECTIVO">Efectivo</option>
             <option value="TARJETA">Tarjeta</option>
@@ -144,7 +126,7 @@ export default function NuevaVenta() {
         </div>
       </div>
 
-      <div className="flex gap-3 items-end">
+      <div className="nueva-venta-productos">
         <Autocomplete
           fetcher={(q) => repo.productos(q, 1)}
           onSelect={addProd}
@@ -154,12 +136,12 @@ export default function NuevaVenta() {
 
       <CartTable items={items} onQty={onQty} onRemove={onRemove} />
 
-      <div className="flex justify-end items-center gap-6">
-        <div className="text-xl">
+      <div className="nueva-venta-footer">
+        <div className="nueva-venta-total">
           Total: <b>{fmtQ(subtotal)}</b>
         </div>
         <button
-          className="px-4 py-2 rounded bg-black text-white disabled:opacity-60"
+          className="nueva-venta-confirmar"
           disabled={!cliente || !items.length || saving}
           onClick={confirmar}
         >

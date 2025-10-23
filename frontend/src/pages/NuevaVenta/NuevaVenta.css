@@ -1,0 +1,72 @@
+.nueva-venta {
+    display: grid;
+    gap: 1rem;
+}
+
+.nueva-venta-header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.nueva-venta-label {
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.nueva-venta-cliente {
+    background-color: #e5e7eb;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.nueva-venta-metodo {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.nueva-venta-select {
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #fff;
+}
+
+.nueva-venta-productos {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.nueva-venta-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nueva-venta-total {
+    font-size: 1.25rem;
+}
+
+.nueva-venta-confirmar {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    background-color: #000;
+    color: #fff;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+}
+
+.nueva-venta-confirmar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.nueva-venta-confirmar:hover:not(:disabled) {
+    opacity: 0.9;
+}

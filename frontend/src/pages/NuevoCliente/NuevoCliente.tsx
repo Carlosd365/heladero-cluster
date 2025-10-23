@@ -1,7 +1,7 @@
-// src/pages/NuevoCliente.tsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { repo } from "../lib/repo";
+import { repo } from "../../lib/repo";
+import "./NuevoCliente.css";
 
 export default function NuevoCliente() {
   const [nombres, setNombres] = useState("");
@@ -15,13 +15,8 @@ export default function NuevoCliente() {
     e.preventDefault();
 
     if (!nombres.trim()) return alert("Ingresa los nombres.");
-
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return alert("Email inválido.");
-    }
-    if (telefono && !/^[0-9+\-\s]{7,20}$/.test(telefono)) {
-      return alert("Teléfono inválido.");
-    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("Email inválido.");
+    if (telefono && !/^[0-9+\-\s]{7,20}$/.test(telefono)) return alert("Teléfono inválido.");
 
     try {
       setSaving(true);
@@ -42,17 +37,17 @@ export default function NuevoCliente() {
   };
 
   return (
-    <section className="grid gap-4 max-w-xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Nuevo cliente</h1>
-        <Link to="/clientes" className="text-sm underline">Volver</Link>
+    <section className="nuevo-cliente">
+      <div className="nuevo-cliente-header">
+        <h1 className="nuevo-cliente-titulo">Nuevo cliente</h1>
+        <Link to="/clientes" className="nuevo-cliente-volver">Volver</Link>
       </div>
 
-      <form onSubmit={onSubmit} className="grid gap-3">
-        <div className="grid">
-          <label className="text-sm text-gray-600">Nombres *</label>
+      <form onSubmit={onSubmit} className="nuevo-cliente-form">
+        <div className="nuevo-cliente-campo">
+          <label className="nuevo-cliente-label">Nombres *</label>
           <input
-            className="border rounded px-3 py-2"
+            className="nuevo-cliente-input"
             value={nombres}
             onChange={(e) => setNombres(e.target.value)}
             placeholder="Ej. Ana Lucía"
@@ -60,48 +55,48 @@ export default function NuevoCliente() {
           />
         </div>
 
-        <div className="grid">
-          <label className="text-sm text-gray-600">Apellidos</label>
+        <div className="nuevo-cliente-campo">
+          <label className="nuevo-cliente-label">Apellidos</label>
           <input
-            className="border rounded px-3 py-2"
+            className="nuevo-cliente-input"
             value={apellidos}
             onChange={(e) => setApellidos(e.target.value)}
             placeholder="Ej. López Pérez"
           />
         </div>
 
-        <div className="grid">
-          <label className="text-sm text-gray-600">Email</label>
+        <div className="nuevo-cliente-campo">
+          <label className="nuevo-cliente-label">Email</label>
           <input
             type="email"
-            className="border rounded px-3 py-2"
+            className="nuevo-cliente-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="correo@ejemplo.com"
           />
         </div>
 
-        <div className="grid">
-          <label className="text-sm text-gray-600">Teléfono</label>
+        <div className="nuevo-cliente-campo">
+          <label className="nuevo-cliente-label">Teléfono</label>
           <input
-            className="border rounded px-3 py-2"
+            className="nuevo-cliente-input"
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
             placeholder="5555-5555"
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="nuevo-cliente-botones">
           <button
             type="submit"
-            className="px-4 py-2 rounded bg-black text-white disabled:opacity-60"
+            className="nuevo-cliente-guardar"
             disabled={saving}
           >
             {saving ? "Guardando..." : "Guardar"}
           </button>
           <button
             type="button"
-            className="px-4 py-2 rounded border"
+            className="nuevo-cliente-cancelar"
             onClick={() => nav("/clientes")}
             disabled={saving}
           >

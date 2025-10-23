@@ -1,0 +1,66 @@
+.clientes {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.clientes-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.clientes-busqueda {
+    border: 1px solid #d1d5db; 
+    border-radius: 0.25rem; 
+    padding: 0.5rem 0.75rem; 
+    width: 18rem;
+    background-color: #fff;
+}
+
+.clientes-nuevo {
+    margin-left: auto; 
+    padding: 0.5rem 0.75rem; 
+    border-radius: 0.25rem; 
+    background-color: #000; 
+    color: #fff; 
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.clientes-nuevo:hover {
+    opacity: 0.9;
+}
+
+.clientes-tabla-contenedor {
+    overflow: auto; 
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem; 
+    background-color: #fff; 
+}
+
+.clientes-tabla {
+    width: 100%; 
+    font-size: 0.875rem; 
+    border-collapse: collapse;
+}
+
+.clientes-tabla thead {
+    background-color: #f3f4f6;
+}
+
+.clientes-tabla th {
+    padding: 0.5rem; 
+    text-align: left; 
+    font-weight: 600;
+}
+
+.clientes-tabla td {
+    padding: 0.5rem; 
+    border-top: 1px solid #e5e7eb;
+}
+
+.clientes-sin-datos {
+    padding: 1rem;
+    text-align: center;
+    color: #6b7280;
+}
