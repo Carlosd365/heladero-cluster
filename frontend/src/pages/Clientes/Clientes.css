@@ -1,6 +1,7 @@
 .clientes {
     display: grid;
     gap: 0.75rem;
+    margin-top: 5rem;
 }
 
 .clientes-header {
@@ -10,52 +11,67 @@
 }
 
 .clientes-busqueda {
+    padding: 0.5rem 1rem; 
+    border-radius: 8px;
     border: 1px solid #d1d5db; 
-    border-radius: 0.25rem; 
-    padding: 0.5rem 0.75rem; 
-    width: 18rem;
-    background-color: #fff;
+    font-size: 0.9rem; 
+    width: 250px;
 }
 
 .clientes-nuevo {
     margin-left: auto; 
-    padding: 0.5rem 0.75rem; 
-    border-radius: 0.25rem; 
-    background-color: #000; 
-    color: #fff; 
+    padding: 0.4rem 0.9rem; 
+    border-radius: 6px;
+    background-color: white;
     text-decoration: none;
+    color: #C85A7C;
+    font-weight: 500;
     font-size: 0.875rem;
+    border: 1px solid transparent;
+    box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
 }
 
 .clientes-nuevo:hover {
-    opacity: 0.9;
+    background: #FADADD;
+    color: #C85A7C;
+    transform: translateY(-1px);
+}
+
+.clientes-nuevo:active {
+    background: white;
+    color: #C85A7C;
+    box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
 }
 
 .clientes-tabla-contenedor {
+    margin-top: 1rem;
     overflow: auto; 
     border: 1px solid #d1d5db;
-    border-radius: 0.25rem; 
+    border-radius: 0.8rem;
     background-color: #fff; 
 }
 
 .clientes-tabla {
-    width: 100%; 
-    font-size: 0.875rem; 
+    width: 1100px; 
+    font-size: 0.9rem;
     border-collapse: collapse;
 }
 
 .clientes-tabla thead {
-    background-color: #f3f4f6;
+    background-color: white;
+    color: #8d425a;
+    letter-spacing: 0.5px;
 }
 
 .clientes-tabla th {
-    padding: 0.5rem; 
-    text-align: left; 
+    padding: 0.75rem 1rem;
+    text-align: center;
     font-weight: 600;
 }
 
 .clientes-tabla td {
-    padding: 0.5rem; 
+    padding: 0.75rem 1rem;
+    text-align: center;
     border-top: 1px solid #e5e7eb;
 }
 

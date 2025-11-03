@@ -45,7 +45,7 @@ export default function NuevoCliente() {
 
       <form onSubmit={onSubmit} className="nuevo-cliente-form">
         <div className="nuevo-cliente-campo">
-          <label className="nuevo-cliente-label">Nombres *</label>
+          <label className="nuevo-cliente-label">Nombres:</label>
           <input
             className="nuevo-cliente-input"
             value={nombres}
@@ -56,7 +56,7 @@ export default function NuevoCliente() {
         </div>
 
         <div className="nuevo-cliente-campo">
-          <label className="nuevo-cliente-label">Apellidos</label>
+          <label className="nuevo-cliente-label">Apellidos:</label>
           <input
             className="nuevo-cliente-input"
             value={apellidos}
@@ -66,7 +66,7 @@ export default function NuevoCliente() {
         </div>
 
         <div className="nuevo-cliente-campo">
-          <label className="nuevo-cliente-label">Email</label>
+          <label className="nuevo-cliente-label">Email:</label>
           <input
             type="email"
             className="nuevo-cliente-input"
@@ -77,7 +77,7 @@ export default function NuevoCliente() {
         </div>
 
         <div className="nuevo-cliente-campo">
-          <label className="nuevo-cliente-label">Teléfono</label>
+          <label className="nuevo-cliente-label">Teléfono:</label>
           <input
             className="nuevo-cliente-input"
             value={telefono}

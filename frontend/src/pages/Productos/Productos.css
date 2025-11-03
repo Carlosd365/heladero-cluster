@@ -1,6 +1,7 @@
 .productos {
     display: grid;
     gap: 0.75rem;
+    margin-top: 5rem;
 }
 
 .productos-header {
@@ -10,66 +11,76 @@
 }
 
 .productos-input {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
     border: 1px solid #d1d5db;
-    border-radius: 0.25rem;
-    padding: 0.5rem 0.75rem;
-    width: 18rem;
-    background-color: #fff;
+    font-size: 0.9rem;
+    width: 250px;
 }
 
 .productos-nuevo {
     margin-left: auto;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.25rem;
-    background-color: #000;
-    color: #fff;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    background-color: white;
     text-decoration: none;
+    color: #C85A7C;
+    font-weight: 500;
     font-size: 0.875rem;
+    border: 1px solid transparent;
+    box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
 }
 
 .productos-nuevo:hover {
-    opacity: 0.9;
+    background: #FADADD;
+    color: #C85A7C;
+    transform: translateY(-1px);
+}
+
+.productos-nuevo:active {
+    background: white;
+    color: #C85A7C;
+    box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
 }
 
 .productos-tabla-contenedor {
+    margin-top: 1rem;
     overflow: auto;
     border: 1px solid #d1d5db;
-    border-radius: 0.25rem;
+    border-radius: 0.8rem;
     background-color: #fff;
 }
 
 .productos-tabla {
-    width: 100%;
-    font-size: 0.875rem;
+    width: 1100px;
+    font-size: 0.9rem;
     border-collapse: collapse;
 }
 
 .productos-tabla thead {
-    background-color: #f3f4f6;
-}
-
-.productos-tabla th,
-.productos-tabla td {
-    padding: 0.5rem;
-    border-top: 1px solid #e5e7eb;
+    background-color: white;
+    color: #8d425a;
+    letter-spacing: 0.5px;
 }
 
 .productos-tabla th {
-    text-align: left;
-}
-
-.productos-th-right {
-    text-align: right;
-}
-
-.productos-th-center {
+    padding: 0.75rem 1rem;
     text-align: center;
+    font-weight: 600;
 }
 
+.productos-tabla td {
+    padding: 0.75rem 1rem;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+}
+
+.productos-th-right,
 .productos-td-right {
     text-align: right;
 }
 
+.productos-th-center,
 .productos-td-center {
     text-align: center;
 }
