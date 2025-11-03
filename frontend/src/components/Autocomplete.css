@@ -1,0 +1,73 @@
+/* === CONTENEDOR GENERAL === */
+.autocomplete {
+  position: relative;
+  display: inline-block;
+  width: 250px;
+}
+
+/* === INPUT === */
+.autocomplete-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #374151;
+  background-color: #fff;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.autocomplete-input:focus {
+  border-color: #c85a7c;
+  box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
+}
+
+/* === LISTA DE RESULTADOS === */
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin-top: 0.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #fff;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* === ELEMENTO INDIVIDUAL === */
+.autocomplete-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: #4b5563;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.autocomplete-item:hover {
+  background-color: #fadadd;
+  color: #8d425a;
+}
+
+/* === SCROLLBAR ESTÉTICO === */
+.autocomplete-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.autocomplete-list::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 90, 124, 0.4);
+  border-radius: 4px;
+}
+
+.autocomplete-list::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(200, 90, 124, 0.6);
+}
