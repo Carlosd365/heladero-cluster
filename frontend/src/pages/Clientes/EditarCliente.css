@@ -1,0 +1,90 @@
+.editar-cliente {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  width: 1200px;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.editar-cliente-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.editar-cliente-titulo {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #8d425a;
+}
+
+.editar-cliente-volver {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #C85A7C;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  background-color: white;
+  box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
+  transition: background 0.25s ease, transform 0.2s;
+}
+
+.editar-cliente-volver:hover {
+  background: #FADADD;
+  transform: translateY(-1px);
+}
+
+.editar-cliente-form {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1100px;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.editar-cliente-campo {
+  display: grid;
+}
+
+.editar-cliente-campo label {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.editar-cliente-campo input {
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.editar-cliente-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.editar-cliente-botones button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #C85A7C;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.editar-cliente-botones button:hover {
+  background: #FADADD;
+}

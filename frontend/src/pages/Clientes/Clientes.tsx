@@ -1,15 +1,43 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { repo } from "../../lib/repo";
+import Modal from "../../components/Modal";
 import "./Clientes.css";
 
 export default function Clientes() {
   const [q, setQ] = useState("");
-  const [rows, setRows] = useState<any[]>([]);
+  const [rows, setRows] = useState<any[]>([]);const [showModal, setShowModal] = useState(false);
+  const [selected, setSelected] = useState<any | null>(null);
+  const [action, setAction] = useState<"delete" | "edit" | null>(null);
+  const nav = useNavigate();
 
   useEffect(() => {
     repo.clientes(q).then(setRows).catch(console.error);
   }, [q]);
+
+  const handleDelete = (cliente: any) => {
+    setSelected(cliente);
+    setAction("delete");
+    setShowModal(true);
+  };
+
+  const handleEdit = (cliente: any) => {
+    nav(`/clientes/editar/${cliente.id_cliente}`);
+  };
+
+  const confirmDelete = async () => {
+    if (!selected) return;
+    try {
+      await repo.eliminarCliente(selected.id_cliente);
+      setRows(rows.filter((r) => r.id_cliente !== selected.id_cliente));
+    } catch (e) {
+      alert("No se pudo eliminar el cliente");
+      console.error(e);
+    } finally {
+      setShowModal(false);
+      setSelected(null);
+    }
+  };
 
   return (
     <section className="clientes">
@@ -27,6 +55,7 @@ export default function Clientes() {
               <th>ID</th>
               <th>Nombre</th>
               <th>Email</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -35,6 +64,22 @@ export default function Clientes() {
                 <td>{r.id_cliente}</td>
                 <td>{`${r.nombres ?? ""} ${r.apellidos ?? ""}`.trim()}</td>
                 <td>{r.email ?? "-"}</td>
+                <td>
+                  <div className="clientes-acciones">
+                    <button
+                      className="btn-editar"
+                      onClick={() => handleEdit(r)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => handleDelete(r)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
             {!rows.length && (
@@ -47,6 +92,19 @@ export default function Clientes() {
           </tbody>
         </table>
       </div>
+
+      {showModal && (
+        <Modal
+          title={
+            action === "delete"
+              ? "Confirmar eliminación"
+              : "Confirmar acción"
+          }
+          message={`¿Estás seguro de que deseas eliminar al cliente "${selected?.nombres}"?`}
+          onConfirm={confirmDelete}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </section>
   );
 }

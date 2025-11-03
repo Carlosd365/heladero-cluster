@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { repo } from "../../lib/repo";
+import Modal from "../../components/Modal";
 import "./Productos.css";
 
 const fmtQ = (n: number) =>
@@ -12,10 +13,36 @@ const fmtQ = (n: number) =>
 export default function Productos() {
     const [q, setQ] = useState("");
     const [rows, setRows] = useState<any[]>([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selected, setSelected] = useState<any | null>(null);
+    const nav = useNavigate();
 
     useEffect(() => {
         repo.productos(q, 1).then(setRows).catch(console.error);
     }, [q]);
+
+    const handleEdit = (producto: any) => {
+        nav(`/productos/editar/${producto.id_producto}`);
+    };
+
+    const handleDelete = (producto: any) => {
+        setSelected(producto);
+        setShowModal(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!selected) return;
+        try {
+            await repo.eliminarProducto(selected.id_producto);
+            setRows(rows.filter((r) => r.id_producto !== selected.id_producto));
+        } catch (e) {
+            alert("No se pudo eliminar el producto");
+            console.error(e);
+        } finally {
+            setShowModal(false);
+            setSelected(null);
+        }
+    };
 
     return (
         <section className="productos">
@@ -36,11 +63,12 @@ export default function Productos() {
                 <table className="productos-tabla">
                     <thead>
                         <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th className="productos-th-right">Precio</th>
-                        <th className="productos-th-center">Stock</th>
-                        <th className="productos-th-center">Estado</th>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th className="productos-th-right">Precio</th>
+                            <th className="productos-th-center">Stock</th>
+                            <th className="productos-th-center">Estado</th>
+                            <th className="productos-th-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,21 +78,39 @@ export default function Productos() {
                             <td>{r.nombre}</td>
                             <td className="productos-td-right">{fmtQ(Number(r.precio))}</td>
                             <td className="productos-td-center">{r.stock}</td>
+                            <td className="productos-td-center"> {Number(r.activo) ? "Activo" : "Inactivo"}</td>
                             <td className="productos-td-center">
-                            {Number(r.activo) ? "Activo" : "Inactivo"}
+                                <div className="productos-acciones">
+                                    <button className="btn-editar" onClick={() => handleEdit(r)} >
+                                        Editar
+                                    </button>
+                                    <button className="btn-eliminar" onClick={() => handleDelete(r)} >
+                                        Eliminar
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         ))}
                         {!rows.length && (
-                        <tr>
-                            <td className="productos-sin-datos" colSpan={5}>
-                            Sin datos
-                            </td>
-                        </tr>
+                            <tr>
+                                <td className="productos-sin-datos" colSpan={6}>
+                                Sin datos
+                                </td>
+                            </tr>
                         )}
                     </tbody>
                 </table>
             </div>
+
+            {showModal && (
+                <Modal
+                title="Confirmar eliminación"
+                message={`¿Estás seguro de eliminar el producto "${selected?.nombre}"?`}
+                onConfirm={confirmDelete}
+                onCancel={() => setShowModal(false)}
+                />
+            )}
+
         </section>
     );
 }
