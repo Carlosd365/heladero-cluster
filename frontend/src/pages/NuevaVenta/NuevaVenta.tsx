@@ -147,6 +147,24 @@ export default function NuevaVenta() {
         >
           {saving ? "Guardando..." : "Confirmar"}
         </button>
+
+        <button
+          className="nueva-venta-confirmar"
+          disabled={saving}
+          onClick={() => {
+            if (
+              window.confirm(
+                "¿Seguro que deseas cancelar la venta?"
+              )
+            ) {
+              setCliente(null);
+              setItems([]);
+              setMetodo("EFECTIVO");
+            }
+          }}
+        >
+          Cancelar
+        </button>
       </div>
     </section>
   );

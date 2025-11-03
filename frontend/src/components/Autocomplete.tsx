@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import "./Autocomplete.css";
 
 export default function Autocomplete({
   fetcher,
@@ -12,8 +13,10 @@ export default function Autocomplete({
   const [q, setQ] = useState("");
   const [items, setItems] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const tRef = useRef<number | null>(null);
 
+  // === FETCH DE RESULTADOS ===
   useEffect(() => {
     if (tRef.current) window.clearTimeout(tRef.current);
     tRef.current = window.setTimeout(async () => {
@@ -21,13 +24,13 @@ export default function Autocomplete({
         setItems([]);
         return;
       }
-      let data: any[] = [];
       try {
-        data = await fetcher(q);
+        const data = await fetcher(q);
+        setItems(data ?? []);
+        setOpen(true);
       } catch (e) {
         console.error("Autocomplete fetch error:", e);
       }
-      setItems(data ?? []);
     }, 200);
 
     return () => {
@@ -35,19 +38,29 @@ export default function Autocomplete({
     };
   }, [q, fetcher]);
 
+  // === CERRAR SI SE HACE CLIC FUERA ===
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="autocomplete" ref={containerRef}>
       <input
         value={q}
         onChange={(e) => {
           setQ(e.target.value);
-          setOpen(true);
         }}
         placeholder={placeholder}
-        className="border rounded px-3 py-2 w-72"
+        className="autocomplete-input"
       />
       {open && items.length > 0 && (
-        <div className="absolute z-10 bg-white border rounded w-full max-h-64 overflow-auto">
+        <div className="autocomplete-list">
           {items.map((it) => (
             <button
               key={it.id_cliente ?? it.id_producto}
@@ -56,7 +69,8 @@ export default function Autocomplete({
                 setOpen(false);
                 setQ("");
               }}
-              className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+              type="button"
+              className="autocomplete-item"
             >
               {it.nombre || `${it.nombres} ${it.apellidos ?? ""}`}
             </button>
