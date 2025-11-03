@@ -22,19 +22,37 @@ async function recalcularTotalesConn(conn: any, id_venta: number) {
 }
 
 export const VentasService = {
-  async list() {
-  const [rows] = await db.query(
-    `SELECT
-      v.*,
-      CONCAT(c.nombres,' ',c.apellidos) AS cliente,
-      COUNT(dv.id_detalle_venta) AS n_detalles
-    FROM ventas v
-    LEFT JOIN clientes c      ON c.id_cliente = v.id_cliente
-    LEFT JOIN detalle_venta dv ON dv.id_venta  = v.id_venta
-    GROUP BY v.id_venta
-    ORDER BY v.id_venta DESC`
-  );
-  return rows as any[];
+  async list(params: { from?: string; to?: string } = {}) {
+    const { from, to } = params;
+
+    // Armamos el WHERE dinámico
+    let where = "1=1";
+    const values: any[] = [];
+
+    if (from) {
+      where += " AND DATE(v.fecha) >= ?";
+      values.push(from);
+    }
+    if (to) {
+      where += " AND DATE(v.fecha) <= ?";
+      values.push(to);
+    }
+
+    const [rows] = await db.query(
+      `SELECT
+        v.*,
+        CONCAT(c.nombres,' ',c.apellidos) AS cliente,
+        COUNT(dv.id_detalle_venta) AS n_detalles
+      FROM ventas v
+      LEFT JOIN clientes c      ON c.id_cliente = v.id_cliente
+      LEFT JOIN detalle_venta dv ON dv.id_venta  = v.id_venta
+      WHERE ${where}
+      GROUP BY v.id_venta
+      ORDER BY v.id_venta DESC`,
+      values
+    );
+
+    return rows as any[];
   },
 
   async get(id_venta: number) {
