@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 70vh; /* centrado vertical */
-    background-color: #f9fafb; /* gris muy suave */
+    height: 70vh;
+    background-color: #f9fafb; 
 }
 
 /* Tarjeta central */
@@ -33,5 +33,5 @@
 /* Texto */
 .dashboard-texto {
     font-size: 1rem;
-    color: #6b7280; /* gris como usabas */
+    color: #6b7280;
 }
