@@ -7,6 +7,8 @@ import Ventas from "../pages/Ventas/Ventas";
 import NuevaVenta from "../pages/NuevaVenta/NuevaVenta";
 import NuevoProducto from "../pages/NuevoProducto/NuevoProducto";
 import NuevoCliente from "../pages/NuevoCliente/NuevoCliente";
+import EditarCliente from "../pages/Clientes/EditarCliente";
+import EditarProducto from "../pages/Productos/EditarProducto";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +22,8 @@ const router = createBrowserRouter([
         { path: "productos/nuevo", element: <NuevoProducto /> },
         { path: "ventas", element: <Ventas /> },
         { path: "ventas/nueva", element: <NuevaVenta /> },
+        { path: "clientes/editar/:id", element: <EditarCliente /> },
+        { path: "productos/editar/:id", element: <EditarProducto /> }
         ],
     },
 ]);

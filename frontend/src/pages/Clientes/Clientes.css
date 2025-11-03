@@ -80,3 +80,43 @@
     text-align: center;
     color: #6b7280;
 }
+
+
+.clientes-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-editar,
+.btn-eliminar {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.btn-editar {
+    color: #374151;
+    box-shadow: 0 0 0 1px rgba(107, 114, 128, 0.15);
+}
+
+.btn-editar:hover {
+    background-color: #f9fafb;
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.2);
+    transform: translateY(-1px);
+}
+
+.btn-eliminar {
+    color: #b91c1c;
+    box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.15);
+}
+
+.btn-eliminar:hover {
+    background-color: #fef2f2;
+    box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.2);
+    transform: translateY(-1px);
+}
