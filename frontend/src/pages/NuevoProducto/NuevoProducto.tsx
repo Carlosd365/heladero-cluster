@@ -48,7 +48,7 @@ export default function NuevoProducto() {
 
       <form onSubmit={onSubmit} className="nuevo-producto-form">
         <div className="nuevo-producto-campo">
-          <label className="nuevo-producto-label">Nombre</label>
+          <label className="nuevo-producto-label">Nombre:</label>
           <input
             className="nuevo-producto-input"
             value={nombre}
@@ -60,7 +60,7 @@ export default function NuevoProducto() {
 
         <div className="nuevo-producto-grid">
           <div className="nuevo-producto-campo">
-            <label className="nuevo-producto-label">Precio</label>
+            <label className="nuevo-producto-label">Precio:</label>
             <input
               type="number"
               step="0.01"
@@ -72,7 +72,7 @@ export default function NuevoProducto() {
             />
           </div>
           <div className="nuevo-producto-campo">
-            <label className="nuevo-producto-label">Stock</label>
+            <label className="nuevo-producto-label">Stock:</label>
             <input
               type="number"
               step="1"

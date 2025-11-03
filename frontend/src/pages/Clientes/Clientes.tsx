@@ -14,12 +14,7 @@ export default function Clientes() {
   return (
     <section className="clientes">
       <div className="clientes-header">
-        <input
-          className="clientes-busqueda"
-          placeholder="Buscar cliente..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
+        <input className="clientes-busqueda" placeholder="Buscar cliente..." value={q} onChange={(e) => setQ(e.target.value)}/>
         <Link to="/clientes/nuevo" className="clientes-nuevo">
           Nuevo cliente
         </Link>
