@@ -1,9 +1,20 @@
 import { Request, Response } from "express";
 import { VentasService } from "../services/ventas.service";
 
-export const list = async (_req: Request, res: Response) => {
-  res.json(await VentasService.list());
+export const list = async (req: Request, res: Response) => {
+  try {
+    const { from, to } = req.query;
+    const ventas = await VentasService.list({
+      from: from as string | undefined,
+      to: to as string | undefined,
+    });
+    res.json(ventas);
+  } catch (error) {
+    console.error("❌ [Ventas] Error al listar ventas:", error);
+    res.status(500).json({ error: "Error al obtener ventas" });
+  }
 };
+
 
 export const get = async (req: Request, res: Response) => {
   const venta = await VentasService.get(Number(req.params.id));
