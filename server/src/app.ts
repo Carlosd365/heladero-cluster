@@ -1,11 +1,20 @@
 import express from "express";
 import cors from "cors";
-import userRoutes from "./routes/userRoutes";
+import { requestLogger } from "./middlewares/logger";
+import clientRoutes from "./routes/clientRoutes";
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
-app.use("/api/users", userRoutes);
+
+app.use(cors({
+    origin: [process.env.CLIENT_URL!],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}))
+
+app.use(requestLogger); 
+
+app.use("/api/clients", clientRoutes);
 
 export default app;
