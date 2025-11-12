@@ -3,6 +3,8 @@ import cors from "cors";
 import { requestLogger } from "./middlewares/logger";
 import clientRoutes from "./routes/clientRoutes";
 import productRoutes from "./routes/productRoutes";
+import "./config/env";
+
 
 const app = express();
 
