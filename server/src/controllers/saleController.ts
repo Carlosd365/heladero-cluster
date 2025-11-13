@@ -56,6 +56,26 @@ export const getSaleById = async (req: Request, res: Response) => {
     }
 };
 
+export const getSalesByClientName = async (req: Request, res: Response) => {
+    const name = req.query;
+
+    if (typeof name !== "string") {
+        return res.status(400).json({ message: "Query parameter 'name' must be a string" });
+    }
+    
+    try {
+        
+        const sale = await SaleServices.getSalesByClientName(name);
+        if (!sale)
+            return res.status(404).json({ message: `Sale with client name = ${name} doesn't exist.` });
+        res.json(sale);
+
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+};
+
 
 export const createSale = async (req: Request, res: Response) => {
     const data = req.body;

@@ -17,6 +17,12 @@ export const getSaleById = async (id: string) => {
     return sale
 }
 
+export const getSalesByClientName = async (name: string) => {
+    return await SaleModel.find({
+        "client.name": { $regex: name, $options: "i" } // i => No importa mayus/minus
+    });
+};
+
 export const createSale = async (data: any) => {
     for (const product of data.products) {
         const productInDB = await ProductModel.findOne({_id: product._id, active: true});
