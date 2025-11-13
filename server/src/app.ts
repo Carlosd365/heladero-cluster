@@ -3,6 +3,7 @@ import cors from "cors";
 import { requestLogger } from "./middlewares/logger";
 import clientRoutes from "./routes/clientRoutes";
 import productRoutes from "./routes/productRoutes";
+import saleRoutes from "./routes/saleRoutes";
 import "./config/env";
 
 
@@ -20,6 +21,7 @@ app.use(requestLogger);
 
 app.use("/api/clients", clientRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/sales", saleRoutes);
 
 
 export default app;
