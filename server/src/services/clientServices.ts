@@ -6,7 +6,7 @@ export const getAllClients = async () => {
 };
 
 export const getClientsByName = async (name: string) => {
-  const client = await ClientModel.find({name: name})
+  const client = await ClientModel.find({name: {$regex: name, $options: "i"}})
   return client;
 };
 

@@ -6,7 +6,7 @@ export const getAllProducts = async () => {
 };
 
 export const getProductsByName = async (name: string) => {
-    const product = await ProductModel.find({name: name})
+    const product = await ProductModel.find({name: {$regex: name, $options: "i"}})
     return product;
 };
 
