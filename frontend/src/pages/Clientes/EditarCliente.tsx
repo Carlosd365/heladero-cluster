@@ -6,10 +6,9 @@ import "./EditarCliente.css";
 
 export default function EditarCliente() {
     const { id } = useParams<{ id: string }>();
-    const [nombres, setNombres] = useState("");
-    const [apellidos, setApellidos] = useState("");
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [telefono, setTelefono] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -20,10 +19,9 @@ export default function EditarCliente() {
         repo
             .cliente(id)
             .then((data) => {
-                setNombres(data.nombres || "");
-                setApellidos(data.apellidos || "");
+                setName(data.name || "");
                 setEmail(data.email || "");
-                setTelefono(data.telefono || "");
+                setPhoneNumber(data.phoneNumber || "");
             })
             .catch(() => alert("No se pudo cargar el cliente"))
             .finally(() => setLoading(false));
@@ -31,7 +29,7 @@ export default function EditarCliente() {
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!nombres.trim()) return alert("Ingresa los nombres.");
+        if (!name.trim()) return alert("Ingresa los nombres.");
         setShowModal(true);
     };
 
@@ -39,10 +37,9 @@ export default function EditarCliente() {
         try {
             setSaving(true);
             await repo.actualizarCliente(id!, {
-                nombres: nombres.trim(),
-                apellidos: apellidos.trim() || null,
-                email: email.trim() || null,
-                telefono: telefono.trim() || null,
+                name: name.trim(),
+                email: email.trim(),
+                phoneNumber: phoneNumber.trim(),
             });
             // alert("Cliente actualizado correctamente");
             nav("/clientes");
@@ -70,18 +67,9 @@ export default function EditarCliente() {
                 <div className="editar-cliente-campo">
                     <label>Nombres:</label>
                     <input
-                        value={nombres}
-                        onChange={(e) => setNombres(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder="Ej. Ana Lucía"
-                    />
-                </div>
-
-                <div className="editar-cliente-campo">
-                    <label>Apellidos:</label>
-                    <input
-                        value={apellidos}
-                        onChange={(e) => setApellidos(e.target.value)}
-                        placeholder="Ej. López Pérez"
                     />
                 </div>
 
@@ -98,8 +86,8 @@ export default function EditarCliente() {
                 <div className="editar-cliente-campo">
                     <label>Teléfono:</label>
                     <input
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="5555-5555"
                     />
                 </div>
@@ -116,7 +104,7 @@ export default function EditarCliente() {
             {showModal && (
                 <Modal
                 title="Confirmar actualización"
-                message={`¿Deseas guardar los cambios realizados al cliente "${nombres}"?`}
+                message={`¿Deseas guardar los cambios realizados al cliente "${name}"?`}
                 onConfirm={confirmUpdate}
                 onCancel={() => setShowModal(false)}
                 />

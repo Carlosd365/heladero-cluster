@@ -69,17 +69,6 @@ export default function NuevoCliente() {
         </div>
 
         <div className="nuevo-cliente-campo">
-          <label className="nuevo-cliente-label">Email:</label>
-          <input
-            type="email"
-            className="nuevo-cliente-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="correo@ejemplo.com"
-          />
-        </div>
-
-        <div className="nuevo-cliente-campo">
           <label className="nuevo-cliente-label">Teléfono:</label>
           <input
             className="nuevo-cliente-input"

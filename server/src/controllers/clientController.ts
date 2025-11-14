@@ -24,15 +24,13 @@ export const getClientsByName = async (req: Request, res: Response) => {
     }
 
     try {
-        
         const clients = await ClientService.getClientsByName(name);
-        if (clients.length === 0)
-            return res.status(404).json({ message: `Clients named ${name} don't exist.` });
-        res.json(clients);
+
+        return res.json(clients);
 
     } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: "Internal server error" });
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 };
 

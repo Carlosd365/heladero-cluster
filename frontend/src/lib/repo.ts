@@ -21,7 +21,7 @@ export const repo = {
   buscarClientes(name: string) {
     return api
       .get("/clients/search", { params: { name } })
-      .then((r) => r.data as Cliente[]);
+      .then((r) => r.data);
   },
 
   cliente(id: string) {
