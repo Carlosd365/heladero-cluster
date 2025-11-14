@@ -4,33 +4,35 @@ import { repo } from "../../lib/repo";
 import "./NuevoCliente.css";
 
 export default function NuevoCliente() {
-  const [nombres, setNombres] = useState("");
-  const [apellidos, setApellidos] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [telefono, setTelefono] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [saving, setSaving] = useState(false);
   const nav = useNavigate();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nombres.trim()) return alert("Ingresa los nombres.");
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("Email inválido.");
-    if (telefono && !/^[0-9+\-\s]{7,20}$/.test(telefono)) return alert("Teléfono inválido.");
+    if (!name.trim()) return alert("Ingresa el nombre del cliente.");
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return alert("Email inválido.");
+    if (phoneNumber && !/^[0-9+\-\s]{7,20}$/.test(phoneNumber))
+      return alert("Teléfono inválido.");
 
     try {
       setSaving(true);
+
       await repo.crearCliente({
-        nombres: nombres.trim(),
-        apellidos: apellidos.trim() || null,
-        email: email.trim() || null,
-        telefono: telefono.trim() || null,
+        name: name.trim(),
+        email: email.trim(),
+        phoneNumber: phoneNumber.trim(),
       });
-      alert("Cliente creado");
+
+      alert("Cliente creado correctamente");
       nav("/clientes");
-    } catch (e: any) {
-      console.error(e);
-      alert(e?.response?.data?.error ?? "No se pudo crear el cliente");
+    } catch (err: any) {
+      console.error(err);
+      alert(err?.response?.data?.message ?? "No se pudo crear el cliente");
     } finally {
       setSaving(false);
     }
@@ -48,20 +50,21 @@ export default function NuevoCliente() {
           <label className="nuevo-cliente-label">Nombres:</label>
           <input
             className="nuevo-cliente-input"
-            value={nombres}
-            onChange={(e) => setNombres(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Ej. Ana Lucía"
             autoFocus
           />
         </div>
 
         <div className="nuevo-cliente-campo">
-          <label className="nuevo-cliente-label">Apellidos:</label>
+          <label className="nuevo-cliente-label">Email:</label>
           <input
+            type="email"
             className="nuevo-cliente-input"
-            value={apellidos}
-            onChange={(e) => setApellidos(e.target.value)}
-            placeholder="Ej. López Pérez"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="correo@ejemplo.com"
           />
         </div>
 
@@ -80,8 +83,8 @@ export default function NuevoCliente() {
           <label className="nuevo-cliente-label">Teléfono:</label>
           <input
             className="nuevo-cliente-input"
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             placeholder="5555-5555"
           />
         </div>

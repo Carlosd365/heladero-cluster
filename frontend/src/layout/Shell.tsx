@@ -6,7 +6,7 @@ export default function Shell() {
         <div className="min-h-screen flex flex-col">
             <header className="app-header">
                 <nav className="app-nav">
-                    <Link to="/" className="app-logo">POS</Link>
+                    <Link to="/" className="app-logo">HOME</Link>
                     <div className="app-links">
                         <NavLink to="/clientes" className="app-link">Clientes</NavLink>
                         <NavLink to="/productos" className="app-link">Productos</NavLink>
