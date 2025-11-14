@@ -18,13 +18,11 @@ export default function Clientes() {
         const query = q.trim();
 
         if (query.length === 0) {
-          // Mostrar todos los clientes activos
           const result = await repo.clientes();
           setRows(result);
           return;
         }
 
-        // Buscar solo si hay texto
         const filtered = await repo.buscarClientes(query);
         setRows(filtered);
 
@@ -52,8 +50,6 @@ export default function Clientes() {
 
     try {
       await repo.eliminarCliente(selected._id);
-
-      // Quitar de la tabla
       setRows(rows.filter((r) => r._id !== selected._id));
     } catch (err) {
       console.error(err);

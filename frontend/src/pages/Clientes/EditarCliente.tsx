@@ -29,7 +29,7 @@ export default function EditarCliente() {
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name.trim()) return alert("Ingresa los nombres.");
+        if (!name.trim()) return alert("Ingresa el nombre.");
         setShowModal(true);
     };
 
@@ -41,11 +41,9 @@ export default function EditarCliente() {
                 email: email.trim(),
                 phoneNumber: phoneNumber.trim(),
             });
-            // alert("Cliente actualizado correctamente");
             nav("/clientes");
         } catch (e) {
             console.error(e);
-            // alert("No se pudo actualizar el cliente");
         } finally {
             setSaving(false);
             setShowModal(false);

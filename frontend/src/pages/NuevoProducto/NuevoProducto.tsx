@@ -4,30 +4,30 @@ import { repo } from "../../lib/repo";
 import "./NuevoProducto.css";
 
 export default function NuevoProducto() {
-  const [nombre, setNombre] = useState("");
-  const [precio, setPrecio] = useState<string>("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState<string>("");
   const [stock, setStock] = useState<string>("0");
-  const [activo, setActivo] = useState(true);
+  const [active, setActive] = useState(true);
   const [saving, setSaving] = useState(false);
   const nav = useNavigate();
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const p = Number(precio);
+    const p = Number(price);
     const s = Number(stock);
 
-    if (!nombre.trim()) return alert("Ingresa el nombre.");
+    if (!name.trim()) return alert("Ingresa el nombre.");
     if (!Number.isFinite(p) || p <= 0) return alert("Precio inválido.");
     if (!Number.isInteger(s) || s < 0) return alert("Stock inválido.");
 
     try {
       setSaving(true);
       await repo.crearProducto({
-        nombre: nombre.trim(),
-        precio: p,
+        name: name.trim(),
+        price: p,
         stock: s,
-        activo: activo ? 1 : 0,
+        active: active ? true : false,
       });
       alert("Producto creado");
       nav("/productos");
@@ -51,8 +51,8 @@ export default function NuevoProducto() {
           <label className="nuevo-producto-label">Nombre:</label>
           <input
             className="nuevo-producto-input"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             placeholder="Ej. Bola de Vainilla"
             autoFocus
           />
@@ -66,8 +66,8 @@ export default function NuevoProducto() {
               step="0.01"
               min="0"
               className="nuevo-producto-input"
-              value={precio}
-              onChange={(e) => setPrecio(e.target.value)}
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
               placeholder="0.00"
             />
           </div>
@@ -88,8 +88,8 @@ export default function NuevoProducto() {
         <label className="nuevo-producto-check">
           <input
             type="checkbox"
-            checked={activo}
-            onChange={(e) => setActivo(e.target.checked)}
+            checked={active}
+            onChange={(e) => setActive(e.target.checked)}
           />
           <span>Activo</span>
         </label>

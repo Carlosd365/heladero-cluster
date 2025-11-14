@@ -5,11 +5,11 @@ import Modal from "../../components/Modal";
 import "../NuevoProducto/NuevoProducto.css";
 
 export default function EditarProducto() {
-    const { id } = useParams();
-    const [nombre, setNombre] = useState("");
-    const [precio, setPrecio] = useState<string>("");
+    const { id } = useParams<{ id: string }>();
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState<string>("");
     const [stock, setStock] = useState<string>("0");
-    const [activo, setActivo] = useState(true);
+    const [active, setActive] = useState(true);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -17,13 +17,14 @@ export default function EditarProducto() {
 
     useEffect(() => {
         if (!id) return;
-        repo.producto(id)
-        .then((p) => {
-            setNombre(p.nombre);
-            setPrecio(String(p.precio));
-            setStock(String(p.stock));
-            setActivo(!!p.activo);
-        })
+        repo
+            .producto(id)
+            .then((p) => {
+                setName(p.name);
+                setPrice(String(p.price));
+                setStock(String(p.stock));
+                setActive(!!p.active);
+            })
         .catch(() => alert("No se pudo cargar el producto"))
         .finally(() => setLoading(false));
     }, [id]);
@@ -31,10 +32,10 @@ export default function EditarProducto() {
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const p = Number(precio);
+        const p = Number(price);
         const s = Number(stock);
 
-        if (!nombre.trim()) return alert("Ingresa el nombre.");
+        if (!name.trim()) return alert("Ingresa el nombre.");
         if (!Number.isFinite(p) || p <= 0) return alert("Precio inválido.");
         if (!Number.isInteger(s) || s < 0) return alert("Stock inválido.");
 
@@ -45,10 +46,10 @@ export default function EditarProducto() {
         try {
             setSaving(true);
             await repo.actualizarProducto(id!, {
-                nombre: nombre.trim(),
-                precio: Number(precio),
+                name: name.trim(),
+                price: Number(price),
                 stock: Number(stock),
-                activo: activo ? 1 : 0,
+                active: active ? true : false,
             });
             // alert("Producto actualizado correctamente");
             nav("/productos");
@@ -77,8 +78,8 @@ export default function EditarProducto() {
                     <label className="nuevo-producto-label">Nombre:</label>
                     <input
                         className="nuevo-producto-input"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </div>
 
@@ -90,8 +91,8 @@ export default function EditarProducto() {
                         step="0.01"
                         min="0"
                         className="nuevo-producto-input"
-                        value={precio}
-                        onChange={(e) => setPrecio(e.target.value)}
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
                         />
                     </div>
                     <div className="nuevo-producto-campo">
@@ -110,8 +111,8 @@ export default function EditarProducto() {
                 <label className="nuevo-producto-check">
                     <input
                         type="checkbox"
-                        checked={activo}
-                        onChange={(e) => setActivo(e.target.checked)}
+                        checked={active}
+                        onChange={(e) => setActive(e.target.checked)}
                     />
                     <span>Activo</span>
                 </label>
@@ -137,7 +138,7 @@ export default function EditarProducto() {
             {showModal && (
                 <Modal
                 title="Confirmar actualización"
-                message={`¿Deseas guardar los cambios en el producto "${nombre}"?`}
+                message={`¿Deseas guardar los cambios en el producto "${name}"?`}
                 onConfirm={confirmUpdate}
                 onCancel={() => setShowModal(false)}
                 />
