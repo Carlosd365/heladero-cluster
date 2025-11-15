@@ -79,3 +79,47 @@
 .cart-subtotal span {
   font-weight: 700;
 }
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  font-size: 1rem;
+  color: #8d425a;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qty-btn:hover {
+  background-color: #FADADD;
+  border-color: #c85a7c;
+}
+
+.qty-input {
+  width: 45px;
+  padding: 0.25rem 0;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #8d425a;
+  font-weight: 500;
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

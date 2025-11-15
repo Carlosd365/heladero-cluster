@@ -162,6 +162,7 @@ export default function NuevaVenta() {
               setCliente(null);
               setItems([]);
               setMetodo("EFECTIVO");
+              nav("/ventas");
             }
           }}
         >
