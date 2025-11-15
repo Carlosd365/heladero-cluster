@@ -1,7 +1,7 @@
 import "./CartTable.css"
 
 export type CartItem = {
-  id_producto: number;
+  id_producto: string;
   nombre: string;
   precio: number;
   cantidad: number;
@@ -14,8 +14,8 @@ export default function CartTable({
   onRemove,
 }: {
   items: CartItem[];
-  onQty: (id: number, qty: number) => void;
-  onRemove: (id: number) => void;
+  onQty: (id: string, qty: number) => void;
+  onRemove: (id: string) => void;
 }) {
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
 

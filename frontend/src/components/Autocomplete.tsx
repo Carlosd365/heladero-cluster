@@ -63,7 +63,7 @@ export default function Autocomplete({
         <div className="autocomplete-list">
           {items.map((it) => (
             <button
-              key={it.id_cliente ?? it.id_producto}
+              key={it._id}
               onClick={() => {
                 onSelect(it);
                 setOpen(false);
@@ -72,7 +72,7 @@ export default function Autocomplete({
               type="button"
               className="autocomplete-item"
             >
-              {it.nombre || `${it.nombres} ${it.apellidos ?? ""}`}
+              {it.name}
             </button>
           ))}
         </div>

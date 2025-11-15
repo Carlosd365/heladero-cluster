@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { repo, type VentaDetalle } from "../../lib/repo";
+import { repo} from "../../lib/repo";
 import "./Ventas.css";
 
 type VentaRow = {
-  id_venta: number;
+  id_venta: string;
   fecha: string | Date;
-  id_cliente?: number | null;
-  cliente?: string | null;
-  total?: number | string | null;
-  metodo_pago?: string | null;
+  cliente?: string;
+  total?: number ;
+  metodo_pago?: string ;
+};
+
+type ProductoComprado = {
+  id: string;
+  nombre: string;
+  cantidad: number;
+  precio: number;
+  subtotal: number;
 };
 
 const fmtCurrency = (n: number) =>
@@ -28,13 +35,20 @@ const fmtDateGT = (d: string | Date) =>
     minute: "2-digit",
   });
 
+function parseSaleDate(date: any): string {
+  if (date && typeof date === "object" && "$date" in date) return date.$date;
+  if (typeof date === "string") return date;
+  if (date instanceof Date) return date.toISOString();
+  return "";
+}
+
 export default function Ventas() {
   const [rows, setRows] = useState<VentaRow[]>([]);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState<number | null>(null);
-  const [detalles, setDetalles] = useState<Record<number, VentaDetalle[]>>({});
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [productos, setProductos] = useState<Record<string, ProductoComprado[]>>({});
   const abortRef = useRef<AbortController | null>(null);
 
   const fetchVentas = async () => {
@@ -44,13 +58,18 @@ export default function Ventas() {
     abortRef.current = controller;
 
     try {
-      const params: Record<string, any> = {};
-      if (from) params.from = from;
-      if (to) params.to = to;
+      const data = await repo.ventas();
 
-      const data = await repo.ventas(params);
       if (!controller.signal.aborted) {
-        setRows(data as VentaRow[]);
+        const rowsMapped: VentaRow[] = data.map((v) => ({
+          id_venta: v._id,
+          fecha: parseSaleDate(v.date),
+          cliente: v.client?.name ?? "Desconocido",
+          total: v.total ?? 0,
+          metodo_pago: v.payment_method ?? "-",
+        }));
+
+        setRows(rowsMapped);
       }
     } catch (e: any) {
       if (!controller.signal.aborted) {
@@ -66,29 +85,67 @@ export default function Ventas() {
     fetchVentas();
   }, []);
 
-  const toggleDetalle = async (id_venta: number) => {
+  const toggleDetalle = async (id_venta: string) => {
     if (expanded === id_venta) {
       setExpanded(null);
       return;
     }
 
-    // Si ya tenemos los detalles cargados
-    if (detalles[id_venta]) {
+    if (productos[id_venta]) {
       setExpanded(id_venta);
       return;
     }
 
     try {
-      const venta = await repo.venta(id_venta); // usa tu método actual
-      if (venta?.detalle?.length) {
-        setDetalles((prev) => ({ ...prev, [id_venta]: venta.detalle! }));
-      } else {
-        setDetalles((prev) => ({ ...prev, [id_venta]: [] }));
-      }
+      const venta = await repo.venta(id_venta);
+
+      const productosMap: ProductoComprado[] = venta.products.map((p) => ({
+        id: p._id,
+        nombre: p.name,
+        cantidad: p.amount,
+        precio: p.price,
+        subtotal: p.subtotal,
+      }));
+
+      setProductos((prev) => ({ ...prev, [id_venta]: productosMap }));
       setExpanded(id_venta);
     } catch (e) {
       console.error(e);
       alert("No se pudo cargar el detalle de la venta");
+    }
+  };
+
+  const aplicarFiltros = async () => {
+
+    console.log("FRONT — FROM (raw):", from);
+    console.log("FRONT — TO (raw):", to);
+    
+    if (!from || !to) {
+      return fetchVentas(); 
+    }
+
+    setLoading(true);
+    try {
+      console.log("FRONT — Llamando repo.ventaPorFecha con:", { from, to });
+      const data = await repo.ventaPorFecha(from, to);
+      console.log("FRONT — DATA RECIBIDA:", data);
+
+      const rowsMapped = data.map(v => ({
+        id_venta: v._id,
+        fecha: parseSaleDate(v.date),
+        cliente: v.client?.name ?? "Desconocido",
+        total: v.total ?? 0,
+        metodo_pago: v.payment_method ?? "-"
+      }));
+
+      console.log("FRONT — rowsMapped:", rowsMapped);
+
+      setRows(rowsMapped);
+    } catch (e) {
+      console.error(e);
+      alert("Error al filtrar ventas.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,9 +171,10 @@ export default function Ventas() {
           />
         </div>
 
-        <button onClick={fetchVentas} className="ventas-actualizar" disabled={loading}>
+        <button onClick={aplicarFiltros} className="ventas-actualizar" disabled={loading}>
           {loading ? "Cargando..." : "Actualizar"}
         </button>
+
         <Link to="/ventas/nueva" className="ventas-nueva">
           Nueva venta
         </Link>
@@ -134,71 +192,62 @@ export default function Ventas() {
               <th className="text-center">Método</th>
             </tr>
           </thead>
-          <tbody>
-            {rows.map((r) => {
-              const totalNum = Number(r.total ?? 0);
-              return (
-                <>
-                  <tr
-                    key={r.id_venta}
-                    className={`ventas-row ${
-                      expanded === r.id_venta ? "ventas-row-activa" : ""
-                    }`}
-                    onClick={() => toggleDetalle(r.id_venta)}
-                  >
-                    <td className="text-center">
-                      {expanded === r.id_venta ? "⮝" : "⮟"}
-                    </td>
-                    <td>{r.id_venta}</td>
-                    <td>{fmtDateGT(r.fecha)}</td>
-                    <td>{r.cliente?.trim() || r.id_cliente || "-"}</td>
-                    <td className="text-right">{fmtCurrency(totalNum)}</td>
-                    <td className="text-center">{r.metodo_pago ?? "-"}</td>
-                  </tr>
 
-                  {expanded === r.id_venta && (
-                    <tr className="ventas-detalle-row">
-                      <td colSpan={6}>
-                        <div className="ventas-detalle">
-                          {detalles[r.id_venta] ? (
-                            detalles[r.id_venta].length ? (
-                              <table className="ventas-detalle-tabla">
-                                <thead>
-                                  <tr>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Subtotal</th>
+          <tbody>
+            {rows.map((r) => (
+              <>
+                <tr
+                  key={r.id_venta}
+                  className={`ventas-row ${expanded === r.id_venta ? "ventas-row-activa" : ""}`}
+                  onClick={() => toggleDetalle(r.id_venta)} // ahora recibe string
+                >
+                  <td className="text-center">{expanded === r.id_venta ? "⮝" : "⮟"}</td>
+                  <td>{r.id_venta}</td>
+                  <td>{fmtDateGT(r.fecha)}</td>
+                  <td>{r.cliente}</td>
+                  <td className="text-right">{fmtCurrency(r.total ?? 0)}</td>
+                  <td className="text-center">{r.metodo_pago}</td>
+                </tr>
+
+                {expanded === r.id_venta && (
+                  <tr className="ventas-detalle-row">
+                    <td colSpan={6}>
+                      <div className="ventas-detalle">
+                        {productos[r.id_venta] ? (
+                          productos[r.id_venta].length ? (
+                            <table className="ventas-detalle-tabla">
+                              <thead>
+                                <tr>
+                                  <th>Producto</th>
+                                  <th>Cantidad</th>
+                                  <th>Precio Unitario</th>
+                                  <th>Subtotal</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {productos[r.id_venta].map((p) => (
+                                  <tr key={p.id}>
+                                    <td>{p.nombre}</td>
+                                    <td>{p.cantidad}</td>
+                                    <td>{fmtCurrency(p.precio)}</td>
+                                    <td>{fmtCurrency(p.subtotal)}</td>
                                   </tr>
-                                </thead>
-                                <tbody>
-                                  {detalles[r.id_venta].map((d) => (
-                                    <tr key={d.id_detalle_venta}>
-                                      <td>{d.nombre ?? `#${d.id_producto}`}</td>
-                                      <td>{d.cantidad}</td>
-                                      <td>{fmtCurrency(d.precio_unitario)}</td>
-                                      <td>{fmtCurrency(d.subtotal)}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            ) : (
-                              <div className="ventas-detalle-cargando">
-                                Sin detalles disponibles.
-                              </div>
-                            )
+                                ))}
+                              </tbody>
+                            </table>
                           ) : (
-                            <div className="ventas-detalle-cargando">
-                              Cargando detalle...
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </>
-              );
-            })}
+                            <div className="ventas-detalle-cargando">Sin productos comprados.</div>
+                          )
+                        ) : (
+                          <div className="ventas-detalle-cargando">Cargando detalle...</div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            ))}
+
             {!rows.length && !loading && (
               <tr>
                 <td className="ventas-sin-datos" colSpan={6}>
@@ -206,6 +255,7 @@ export default function Ventas() {
                 </td>
               </tr>
             )}
+
             {loading && (
               <tr>
                 <td className="ventas-cargando" colSpan={6}>
