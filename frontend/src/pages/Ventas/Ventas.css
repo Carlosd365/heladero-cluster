@@ -239,3 +239,32 @@
   border-color: #c85a7c;
   transform: translateY(-1px);
 }
+
+.mv-pages {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.mv-page-btn {
+  background: white;
+  border: 1px solid #e5b8c9;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  color: #8d425a;
+  font-weight: 500;
+}
+
+.mv-page-btn:hover {
+  background: #fadadd;
+  border-color: #c85a7c;
+}
+
+.mv-page-btn.active {
+  background: #c85a7c;
+  border-color: #c85a7c;
+  color: white;
+}

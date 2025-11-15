@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { repo} from "../../lib/repo";
+import ModalVenta from "../../components/ModalVenta";
 import "./Ventas.css";
 
 type VentaRow = {
@@ -42,14 +43,23 @@ function parseSaleDate(date: any): string {
   return "";
 }
 
+const getPaginationNumbers = (totalPages: number, _currentPage: number) => {
+  const pages = [];
+  for (let i = 1; i <= totalPages; i++) pages.push(i);
+  return pages;
+};
+
 export default function Ventas() {
   const [rows, setRows] = useState<VentaRow[]>([]);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [productos, setProductos] = useState<Record<string, ProductoComprado[]>>({});
   const abortRef = useRef<AbortController | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalVentaId, setModalVentaId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 3;
 
   const fetchVentas = async () => {
     setLoading(true);
@@ -86,20 +96,16 @@ export default function Ventas() {
   }, []);
 
   const toggleDetalle = async (id_venta: string) => {
-    if (expanded === id_venta) {
-      setExpanded(null);
-      return;
-    }
+    setModalVentaId(id_venta);
+    setModalOpen(true);
+    setPage(1);
 
-    if (productos[id_venta]) {
-      setExpanded(id_venta);
-      return;
-    }
+    if (productos[id_venta]) return;
 
     try {
       const venta = await repo.venta(id_venta);
 
-      const productosMap: ProductoComprado[] = venta.products.map((p) => ({
+      const productosMap = venta.products.map((p) => ({
         id: p._id,
         nombre: p.name,
         cantidad: p.amount,
@@ -108,7 +114,6 @@ export default function Ventas() {
       }));
 
       setProductos((prev) => ({ ...prev, [id_venta]: productosMap }));
-      setExpanded(id_venta);
     } catch (e) {
       console.error(e);
       alert("No se pudo cargar el detalle de la venta");
@@ -210,57 +215,18 @@ export default function Ventas() {
 
           <tbody>
             {rows.map((r) => (
-              <>
-                <tr
-                  key={r.id_venta}
-                  className={`ventas-row ${expanded === r.id_venta ? "ventas-row-activa" : ""}`}
-                  onClick={() => toggleDetalle(r.id_venta)} // ahora recibe string
-                >
-                  <td className="text-center">{expanded === r.id_venta ? "⮝" : "⮟"}</td>
-                  <td>{r.id_venta}</td>
-                  <td>{fmtDateGT(r.fecha)}</td>
-                  <td>{r.cliente}</td>
-                  <td className="text-right">{fmtCurrency(r.total ?? 0)}</td>
-                  <td className="text-center">{r.metodo_pago}</td>
-                </tr>
-
-                {expanded === r.id_venta && (
-                  <tr className="ventas-detalle-row">
-                    <td colSpan={6}>
-                      <div className="ventas-detalle">
-                        {productos[r.id_venta] ? (
-                          productos[r.id_venta].length ? (
-                            <table className="ventas-detalle-tabla">
-                              <thead>
-                                <tr>
-                                  <th>Producto</th>
-                                  <th>Cantidad</th>
-                                  <th>Precio Unitario</th>
-                                  <th>Subtotal</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {productos[r.id_venta].map((p) => (
-                                  <tr key={p.id}>
-                                    <td>{p.nombre}</td>
-                                    <td>{p.cantidad}</td>
-                                    <td>{fmtCurrency(p.precio)}</td>
-                                    <td>{fmtCurrency(p.subtotal)}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          ) : (
-                            <div className="ventas-detalle-cargando">Sin productos comprados.</div>
-                          )
-                        ) : (
-                          <div className="ventas-detalle-cargando">Cargando detalle...</div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </>
+              <tr
+                key={r.id_venta}
+                className="ventas-row"
+                onClick={() => toggleDetalle(r.id_venta)}
+              >
+                <td></td>
+                <td>{r.id_venta}</td>
+                <td>{fmtDateGT(r.fecha)}</td>
+                <td>{r.cliente}</td>
+                <td className="text-right">{fmtCurrency(r.total ?? 0)}</td>
+                <td className="text-center">{r.metodo_pago}</td>
+              </tr>
             ))}
 
             {!rows.length && !loading && (
@@ -281,6 +247,63 @@ export default function Ventas() {
           </tbody>
         </table>
       </div>
+
+      <ModalVenta
+    open={modalOpen}
+    onClose={() => setModalOpen(false)}
+    title={`Venta #${(modalVentaId || "").slice(0, 8).toUpperCase()}`}
+  >
+    {!modalVentaId || !productos[modalVentaId] ? (
+      <p>Cargando...</p>
+    ) : (
+      <>
+        <div className="venta-info-box">
+          <div><b>Cliente:</b> {rows.find(x => x.id_venta === modalVentaId)?.cliente}</div>
+          <div><b>Método:</b> {rows.find(x => x.id_venta === modalVentaId)?.metodo_pago}</div>
+          <div>
+            <b>Fecha:</b>{" "}
+            {rows.find(x => x.id_venta === modalVentaId)?.fecha
+              ? fmtDateGT(rows.find(x => x.id_venta === modalVentaId)!.fecha)
+              : "Sin fecha"}
+          </div>
+        </div>
+
+        {productos[modalVentaId]
+          .slice((page - 1) * pageSize, page * pageSize)
+          .map((p) => (
+            <div key={p.id} className="producto-box">
+              <div className="producto-titulo">{p.nombre}</div>
+
+              <div className="producto-grid">
+                <span><b>Cant.:</b> {p.cantidad}</span>
+                <span><b>Precio:</b> {fmtCurrency(p.precio)}</span>
+              </div>
+
+              <div className="producto-sub">
+                <b>Subtotal:</b> {fmtCurrency(p.subtotal)}
+              </div>
+            </div>
+          ))}
+
+        {/* === NUEVA PAGINACIÓN === */}
+        <div className="mv-pages">
+          {getPaginationNumbers(
+            Math.ceil(productos[modalVentaId].length / pageSize),
+            page
+          ).map((num) => (
+            <button
+              key={num}
+              className={`mv-page-btn ${num === page ? "active" : ""}`}
+              onClick={() => setPage(num)}
+            >
+              {num}
+            </button>
+          ))}
+        </div>
+      </>
+    )}
+  </ModalVenta>
+
     </section>
   );
 }
