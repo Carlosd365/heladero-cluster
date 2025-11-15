@@ -22,6 +22,29 @@ export interface Producto {
 export type ProductoCreate = Omit<Producto, "_id">;
 export type ProductoUpdate = Partial<ProductoCreate>;
 
+export interface Venta {
+  _id: string;
+  client: {
+    _id: string;
+    name: string;
+  };
+  payment_method: string;
+  total: number;
+  products: {
+    _id: string;
+    name: string;
+    amount: number;
+    price: number;
+    subtotal: number;
+  }[];
+  deleted: boolean;
+  date: {
+    $date: string; 
+  };
+}
+
+export type VentaCreate = Omit<Venta, "_id" | "deleted" | "date">;
+
 
 export const repo = {
 
@@ -83,6 +106,34 @@ export const repo = {
     return api
       .delete(`/products/${id}`)
       .then((r) => r.data as Producto);
+  },
+
+  //Ventas
+
+  ventas() {
+    return api.get("/sales").then((r) => r.data as Venta[]);
+  },
+
+  ventaPorFecha(from: string, to: string) {
+    return api.get("/sales/date", { params: { from, to } }).then((r) => r.data as Venta[]);
+  },
+
+  buscarVentas(name: string) {
+    return api.get("/sales/search", { params: { name } }).then((r) => r.data as Venta[]);
+  },
+
+  venta(id: string) {
+    return api.get(`/sales/${id}`).then((r) => r.data as Venta);
+  },
+
+  crearVenta(payload: VentaCreate) {
+    return api.post("/sales", payload).then((r) => r.data as Venta);
+  },
+
+  eliminarVenta(id: string) {
+    return api
+      .delete(`/sales/${id}`)
+      .then((r) => r.data as Venta);
   },
 
 };

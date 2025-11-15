@@ -41,77 +41,91 @@ export default function NuevoProducto() {
 
   return (
     <section className="nuevo-producto">
-      <div className="nuevo-producto-header">
-        <h1 className="nuevo-producto-titulo">Nuevo producto</h1>
-        <Link to="/productos" className="nuevo-producto-volver">Volver</Link>
+
+      <div className="nuevo-producto-section">
+
+        <div className="nuevo-producto-header">
+          <h1 className="nuevo-producto-titulo">Nuevo producto</h1>
+          <Link to="/productos" className="nuevo-producto-volver">Volver</Link>
+        </div>
+
+        <div className="nuevo-producto-subtitulo">
+          Ingresa los datos necesarios para registrar un nuevo producto.
+        </div>
+
+        <form onSubmit={onSubmit} className="nuevo-producto-form">
+
+          <div className="nuevo-producto-campo">
+            <label className="nuevo-producto-label">Nombre:</label>
+            <input
+              className="nuevo-producto-input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ej. Bola de Vainilla"
+              autoFocus
+            />
+          </div>
+
+          <div className="nuevo-producto-grid">
+            <div className="nuevo-producto-campo">
+              <label className="nuevo-producto-label">Precio:</label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                className="nuevo-producto-input"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="0.00"
+              />
+            </div>
+
+            <div className="nuevo-producto-campo">
+              <label className="nuevo-producto-label">Stock:</label>
+              <input
+                type="number"
+                step="1"
+                min="0"
+                className="nuevo-producto-input"
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <label className="nuevo-producto-check">
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={(e) => setActive(e.target.checked)}
+            />
+            <span>Activo</span>
+          </label>
+
+          <div className="nuevo-producto-botones">
+            <button
+              type="submit"
+              className="nuevo-producto-guardar"
+              disabled={saving}
+            >
+              {saving ? "Guardando..." : "Guardar"}
+            </button>
+
+            <button
+              type="button"
+              className="nuevo-producto-cancelar"
+              onClick={() => nav("/productos")}
+              disabled={saving}
+            >
+              Cancelar
+            </button>
+          </div>
+
+        </form>
+
       </div>
 
-      <form onSubmit={onSubmit} className="nuevo-producto-form">
-        <div className="nuevo-producto-campo">
-          <label className="nuevo-producto-label">Nombre:</label>
-          <input
-            className="nuevo-producto-input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ej. Bola de Vainilla"
-            autoFocus
-          />
-        </div>
-
-        <div className="nuevo-producto-grid">
-          <div className="nuevo-producto-campo">
-            <label className="nuevo-producto-label">Precio:</label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              className="nuevo-producto-input"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.00"
-            />
-          </div>
-          <div className="nuevo-producto-campo">
-            <label className="nuevo-producto-label">Stock:</label>
-            <input
-              type="number"
-              step="1"
-              min="0"
-              className="nuevo-producto-input"
-              value={stock}
-              onChange={(e) => setStock(e.target.value)}
-              placeholder="0"
-            />
-          </div>
-        </div>
-
-        <label className="nuevo-producto-check">
-          <input
-            type="checkbox"
-            checked={active}
-            onChange={(e) => setActive(e.target.checked)}
-          />
-          <span>Activo</span>
-        </label>
-
-        <div className="nuevo-producto-botones">
-          <button
-            type="submit"
-            className="nuevo-producto-guardar"
-            disabled={saving}
-          >
-            {saving ? "Guardando..." : "Guardar"}
-          </button>
-          <button
-            type="button"
-            className="nuevo-producto-cancelar"
-            onClick={() => nav("/productos")}
-            disabled={saving}
-          >
-            Cancelar
-          </button>
-        </div>
-      </form>
     </section>
   );
 }

@@ -17,22 +17,34 @@ export const getAllSales = async (_req: Request, res: Response) => {
 };
 
 export const getAllSalesByDate = async (req: Request, res: Response) => {
-    const from = new Date(req.query.from as string);
-    const to = new Date(req.query.to as string);
+
+    const fromStr = req.query.from as string;
+    const toStr = req.query.to as string;
+
+    if (!fromStr || !toStr) {
+        return res.status(400).json({ message: "from y to son requeridos" });
+    }
+
+    const parseLocalDate = (str: string) => {
+        const [y, m, d] = str.split("-").map(Number);
+        return new Date(y, m - 1, d);
+    };
+
+    const from = parseLocalDate(fromStr);
+    const to = parseLocalDate(toStr);
+
+    // Normalizar
+    from.setHours(0, 0, 0, 0);
+    to.setHours(23, 59, 59, 999);
 
     try {
-        
         const sales = await SaleServices.getAllSalesByDate(from, to);
         if (sales.length === 0) {
-            return res.status(404).json({
-                message: `There are no sales from ${from.toISOString()} to ${to.toISOString()}.`
-            });
+            return res.json([]); 
         }
-        res.json(sales)
-
+        res.json(sales);
     } catch (error: any) {
-        console.error(error)
-        res.status(500).json({ message: error.message || "Internal server error" });
+    res.status(500).json({ message: error.message });
     }
 };
 

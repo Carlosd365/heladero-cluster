@@ -1,15 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { repo, type VentaDetalle } from "../../lib/repo";
+import { repo} from "../../lib/repo";
+import ModalVenta from "../../components/ModalVenta";
 import "./Ventas.css";
 
 type VentaRow = {
-  id_venta: number;
+  id_venta: string;
   fecha: string | Date;
-  id_cliente?: number | null;
-  cliente?: string | null;
-  total?: number | string | null;
-  metodo_pago?: string | null;
+  cliente?: string;
+  total?: number ;
+  metodo_pago?: string ;
+};
+
+type ProductoComprado = {
+  id: string;
+  nombre: string;
+  cantidad: number;
+  precio: number;
+  subtotal: number;
 };
 
 const fmtCurrency = (n: number) =>
@@ -28,14 +36,30 @@ const fmtDateGT = (d: string | Date) =>
     minute: "2-digit",
   });
 
+function parseSaleDate(date: any): string {
+  if (date && typeof date === "object" && "$date" in date) return date.$date;
+  if (typeof date === "string") return date;
+  if (date instanceof Date) return date.toISOString();
+  return "";
+}
+
+const getPaginationNumbers = (totalPages: number, _currentPage: number) => {
+  const pages = [];
+  for (let i = 1; i <= totalPages; i++) pages.push(i);
+  return pages;
+};
+
 export default function Ventas() {
   const [rows, setRows] = useState<VentaRow[]>([]);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState<number | null>(null);
-  const [detalles, setDetalles] = useState<Record<number, VentaDetalle[]>>({});
+  const [productos, setProductos] = useState<Record<string, ProductoComprado[]>>({});
   const abortRef = useRef<AbortController | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalVentaId, setModalVentaId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 3;
 
   const fetchVentas = async () => {
     setLoading(true);
@@ -44,13 +68,18 @@ export default function Ventas() {
     abortRef.current = controller;
 
     try {
-      const params: Record<string, any> = {};
-      if (from) params.from = from;
-      if (to) params.to = to;
+      const data = await repo.ventas();
 
-      const data = await repo.ventas(params);
       if (!controller.signal.aborted) {
-        setRows(data as VentaRow[]);
+        const rowsMapped: VentaRow[] = data.map((v) => ({
+          id_venta: v._id,
+          fecha: parseSaleDate(v.date),
+          cliente: v.client?.name ?? "Desconocido",
+          total: v.total ?? 0,
+          metodo_pago: v.payment_method ?? "-",
+        }));
+
+        setRows(rowsMapped);
       }
     } catch (e: any) {
       if (!controller.signal.aborted) {
@@ -66,35 +95,69 @@ export default function Ventas() {
     fetchVentas();
   }, []);
 
-  const toggleDetalle = async (id_venta: number) => {
-    if (expanded === id_venta) {
-      setExpanded(null);
-      return;
-    }
+  const toggleDetalle = async (id_venta: string) => {
+    setModalVentaId(id_venta);
+    setModalOpen(true);
+    setPage(1);
 
-    // Si ya tenemos los detalles cargados
-    if (detalles[id_venta]) {
-      setExpanded(id_venta);
-      return;
-    }
+    if (productos[id_venta]) return;
 
     try {
-      const venta = await repo.venta(id_venta); // usa tu método actual
-      if (venta?.detalle?.length) {
-        setDetalles((prev) => ({ ...prev, [id_venta]: venta.detalle! }));
-      } else {
-        setDetalles((prev) => ({ ...prev, [id_venta]: [] }));
-      }
-      setExpanded(id_venta);
+      const venta = await repo.venta(id_venta);
+
+      const productosMap = venta.products.map((p) => ({
+        id: p._id,
+        nombre: p.name,
+        cantidad: p.amount,
+        precio: p.price,
+        subtotal: p.subtotal,
+      }));
+
+      setProductos((prev) => ({ ...prev, [id_venta]: productosMap }));
     } catch (e) {
       console.error(e);
       alert("No se pudo cargar el detalle de la venta");
     }
   };
 
+  const aplicarFiltros = async () => {
+
+    console.log("FRONT — FROM (raw):", from);
+    console.log("FRONT — TO (raw):", to);
+    
+    if (!from || !to) {
+      return fetchVentas(); 
+    }
+
+    setLoading(true);
+    try {
+      console.log("FRONT — Llamando repo.ventaPorFecha con:", { from, to });
+      const data = await repo.ventaPorFecha(from, to);
+      console.log("FRONT — DATA RECIBIDA:", data);
+
+      const rowsMapped = data.map(v => ({
+        id_venta: v._id,
+        fecha: parseSaleDate(v.date),
+        cliente: v.client?.name ?? "Desconocido",
+        total: v.total ?? 0,
+        metodo_pago: v.payment_method ?? "-"
+      }));
+
+      console.log("FRONT — rowsMapped:", rowsMapped);
+
+      setRows(rowsMapped);
+    } catch (e) {
+      console.error(e);
+      alert("Error al filtrar ventas.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="ventas">
       <div className="ventas-filtros">
+
         <div className="ventas-campo">
           <label className="ventas-label">Desde</label>
           <input
@@ -104,6 +167,7 @@ export default function Ventas() {
             className="ventas-input"
           />
         </div>
+
         <div className="ventas-campo">
           <label className="ventas-label">Hasta</label>
           <input
@@ -114,9 +178,23 @@ export default function Ventas() {
           />
         </div>
 
-        <button onClick={fetchVentas} className="ventas-actualizar" disabled={loading}>
+        {/* 🔄 Botón Reset con SVG */}
+        <button
+          className="ventas-reset"
+          onClick={() => {
+            setFrom("");
+            setTo("");
+            fetchVentas(); // Recargar ventas sin filtros
+          }}
+          title="Reiniciar filtros"
+        >
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M909.1 209.3l-56.4 44.1C775.8 155.1 656.2 92 521.9 92 290 92 102.3 279.5 102 511.5 101.7 743.7 289.8 932 521.9 932c181.3 0 335.8-115 394.6-276.1 1.5-4.2-.7-8.9-4.9-10.3l-56.7-19.5a8 8 0 0 0-10.1 4.8c-1.8 5-3.8 10-5.9 14.9-17.3 41-42.1 77.8-73.7 109.4A344.77 344.77 0 0 1 655.9 829c-42.3 17.9-87.4 27-133.8 27-46.5 0-91.5-9.1-133.8-27A341.5 341.5 0 0 1 279 755.2a342.16 342.16 0 0 1-73.7-109.4c-17.9-42.4-27-87.4-27-133.9s9.1-91.5 27-133.9c17.3-41 42.1-77.8 73.7-109.4 31.6-31.6 68.4-56.4 109.3-73.8 42.3-17.9 87.4-27 133.8-27 46.5 0 91.5 9.1 133.8 27a341.5 341.5 0 0 1 109.3 73.8c9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47a8 8 0 0 0 3 14.1l175.6 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c-.1-6.6-7.8-10.3-13-6.2z"></path></svg>
+        </button>
+
+        <button onClick={aplicarFiltros} className="ventas-actualizar" disabled={loading}>
           {loading ? "Cargando..." : "Actualizar"}
         </button>
+
         <Link to="/ventas/nueva" className="ventas-nueva">
           Nueva venta
         </Link>
@@ -134,71 +212,23 @@ export default function Ventas() {
               <th className="text-center">Método</th>
             </tr>
           </thead>
-          <tbody>
-            {rows.map((r) => {
-              const totalNum = Number(r.total ?? 0);
-              return (
-                <>
-                  <tr
-                    key={r.id_venta}
-                    className={`ventas-row ${
-                      expanded === r.id_venta ? "ventas-row-activa" : ""
-                    }`}
-                    onClick={() => toggleDetalle(r.id_venta)}
-                  >
-                    <td className="text-center">
-                      {expanded === r.id_venta ? "⮝" : "⮟"}
-                    </td>
-                    <td>{r.id_venta}</td>
-                    <td>{fmtDateGT(r.fecha)}</td>
-                    <td>{r.cliente?.trim() || r.id_cliente || "-"}</td>
-                    <td className="text-right">{fmtCurrency(totalNum)}</td>
-                    <td className="text-center">{r.metodo_pago ?? "-"}</td>
-                  </tr>
 
-                  {expanded === r.id_venta && (
-                    <tr className="ventas-detalle-row">
-                      <td colSpan={6}>
-                        <div className="ventas-detalle">
-                          {detalles[r.id_venta] ? (
-                            detalles[r.id_venta].length ? (
-                              <table className="ventas-detalle-tabla">
-                                <thead>
-                                  <tr>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Subtotal</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {detalles[r.id_venta].map((d) => (
-                                    <tr key={d.id_detalle_venta}>
-                                      <td>{d.nombre ?? `#${d.id_producto}`}</td>
-                                      <td>{d.cantidad}</td>
-                                      <td>{fmtCurrency(d.precio_unitario)}</td>
-                                      <td>{fmtCurrency(d.subtotal)}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            ) : (
-                              <div className="ventas-detalle-cargando">
-                                Sin detalles disponibles.
-                              </div>
-                            )
-                          ) : (
-                            <div className="ventas-detalle-cargando">
-                              Cargando detalle...
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </>
-              );
-            })}
+          <tbody>
+            {rows.map((r) => (
+              <tr
+                key={r.id_venta}
+                className="ventas-row"
+                onClick={() => toggleDetalle(r.id_venta)}
+              >
+                <td></td>
+                <td>{r.id_venta}</td>
+                <td>{fmtDateGT(r.fecha)}</td>
+                <td>{r.cliente}</td>
+                <td className="text-right">{fmtCurrency(r.total ?? 0)}</td>
+                <td className="text-center">{r.metodo_pago}</td>
+              </tr>
+            ))}
+
             {!rows.length && !loading && (
               <tr>
                 <td className="ventas-sin-datos" colSpan={6}>
@@ -206,6 +236,7 @@ export default function Ventas() {
                 </td>
               </tr>
             )}
+
             {loading && (
               <tr>
                 <td className="ventas-cargando" colSpan={6}>
@@ -216,6 +247,63 @@ export default function Ventas() {
           </tbody>
         </table>
       </div>
+
+      <ModalVenta
+    open={modalOpen}
+    onClose={() => setModalOpen(false)}
+    title={`Venta #${(modalVentaId || "").slice(0, 8).toUpperCase()}`}
+  >
+    {!modalVentaId || !productos[modalVentaId] ? (
+      <p>Cargando...</p>
+    ) : (
+      <>
+        <div className="venta-info-box">
+          <div><b>Cliente:</b> {rows.find(x => x.id_venta === modalVentaId)?.cliente}</div>
+          <div><b>Método:</b> {rows.find(x => x.id_venta === modalVentaId)?.metodo_pago}</div>
+          <div>
+            <b>Fecha:</b>{" "}
+            {rows.find(x => x.id_venta === modalVentaId)?.fecha
+              ? fmtDateGT(rows.find(x => x.id_venta === modalVentaId)!.fecha)
+              : "Sin fecha"}
+          </div>
+        </div>
+
+        {productos[modalVentaId]
+          .slice((page - 1) * pageSize, page * pageSize)
+          .map((p) => (
+            <div key={p.id} className="producto-box">
+              <div className="producto-titulo">{p.nombre}</div>
+
+              <div className="producto-grid">
+                <span><b>Cant.:</b> {p.cantidad}</span>
+                <span><b>Precio:</b> {fmtCurrency(p.precio)}</span>
+              </div>
+
+              <div className="producto-sub">
+                <b>Subtotal:</b> {fmtCurrency(p.subtotal)}
+              </div>
+            </div>
+          ))}
+
+        {/* === NUEVA PAGINACIÓN === */}
+        <div className="mv-pages">
+          {getPaginationNumbers(
+            Math.ceil(productos[modalVentaId].length / pageSize),
+            page
+          ).map((num) => (
+            <button
+              key={num}
+              className={`mv-page-btn ${num === page ? "active" : ""}`}
+              onClick={() => setPage(num)}
+            >
+              {num}
+            </button>
+          ))}
+        </div>
+      </>
+    )}
+  </ModalVenta>
+
     </section>
   );
 }
