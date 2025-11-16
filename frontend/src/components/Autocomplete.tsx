@@ -16,7 +16,6 @@ export default function Autocomplete({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const tRef = useRef<number | null>(null);
 
-  // === FETCH DE RESULTADOS ===
   useEffect(() => {
     if (tRef.current) window.clearTimeout(tRef.current);
     tRef.current = window.setTimeout(async () => {
@@ -38,7 +37,6 @@ export default function Autocomplete({
     };
   }, [q, fetcher]);
 
-  // === CERRAR SI SE HACE CLIC FUERA ===
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -53,8 +51,14 @@ export default function Autocomplete({
     <div className="autocomplete" ref={containerRef}>
       <input
         value={q}
-        onChange={(e) => {
-          setQ(e.target.value);
+        onChange={(e) => setQ(e.target.value)}
+        onFocus={async () => {
+          if (!q.trim()) {
+            // cargar lista completa cuando el input está vacío
+            const data = await fetcher("");
+            setItems(data ?? []);
+            setOpen(true);
+          }
         }}
         placeholder={placeholder}
         className="autocomplete-input"
