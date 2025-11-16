@@ -26,7 +26,6 @@ export default function NuevaVenta() {
     [items]
   );
 
-  // AGREGAR PRODUCTO
   const addProd = (p: any) => {
     setItems((prev) => {
       const found = prev.find((x) => x.id_producto === p._id);
@@ -61,7 +60,6 @@ export default function NuevaVenta() {
   const onRemove = (id: string) =>
     setItems((prev) => prev.filter((x) => x.id_producto !== id));
 
-  // CONFIRMAR VENTA
   const confirmar = async () => {
     if (!cliente) return alert("Selecciona un cliente.");
     if (!items.length) return alert("Agrega al menos un producto.");
@@ -69,7 +67,6 @@ export default function NuevaVenta() {
     try {
       setSaving(true);
 
-      // FORMATO QUE TU REPO / BACKEND ESPERA
       const payload: VentaCreate = {
         client: {
           _id: cliente._id,
@@ -134,7 +131,12 @@ export default function NuevaVenta() {
 
       <div className="nueva-venta-productos">
         <Autocomplete
-          fetcher={(q) => repo.buscarProductos(q)}
+          fetcher={async (q) => {
+            const productos = await repo.buscarProductos(q);
+
+            // Filtrar solo productos activos para la venta
+            return productos.filter((p: { active: boolean; }) => p.active === true);
+          }}
           onSelect={addProd}
           placeholder="Buscar producto..."
         />

@@ -1,12 +1,12 @@
 import { Product, ProductModel } from "../models/Product";
 
 export const getAllProducts = async () => {
-    const products = await ProductModel.find({active: true})
+    const products = await ProductModel.find()
     return products;
 };
 
 export const getProductsByName = async (name: string) => {
-    const product = await ProductModel.find({name: {$regex: name, $options: "i"}, active: true})
+    const product = await ProductModel.find({name: {$regex: name, $options: "i"}})
     return product;
 };
 

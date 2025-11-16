@@ -38,8 +38,11 @@
   box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
 }
 
-.ventas-actualizar,
 .ventas-nueva {
+  background-color: white;
+  color: #c85a7c;
+  box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
+  text-decoration: none;
   padding: 0.45rem 1rem;
   border-radius: 6px;
   font-size: 0.875rem;
@@ -47,31 +50,7 @@
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.ventas-actualizar {
-  margin-left: auto;
-  background-color: white;
-  color: #c85a7c;
-  box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
-  text-decoration: none;
-}
-
-.ventas-actualizar:hover:not(:disabled) {
-  background-color: #fadadd;
-  transform: translateY(-1px);
-}
-
-.ventas-actualizar:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.ventas-nueva {
-  background-color: white;
-  color: #c85a7c;
-  box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
-  text-decoration: none;
+  margin-left: auto;   
 }
 
 .ventas-nueva:hover {
@@ -264,7 +243,7 @@
 }
 
 .mv-page-btn.active {
-  background: #c85a7c;
-  border-color: #c85a7c;
+  background: #cc6a86;
+  border-color: #cc6a86;
   color: white;
 }
