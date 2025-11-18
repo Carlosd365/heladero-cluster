@@ -5,7 +5,7 @@
   width: 1200px;         
   min-height: 80vh;
   gap: 1.5rem;
-  margin-top: 3rem;
+  margin-top: 8rem;
   background: #faf9fb;     
   padding-bottom: 4rem;
 }
@@ -166,4 +166,20 @@
 .nuevo-producto-cancelar:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.nuevo-producto-card {
+  position: relative;
+  width: 100%;
+  max-width: 950px;
+  padding: 2.5rem 2.8rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.07);
+  overflow: hidden; 
+}
+
+.nuevo-producto-card > * {
+  position: relative;
+  z-index: 2;
 }

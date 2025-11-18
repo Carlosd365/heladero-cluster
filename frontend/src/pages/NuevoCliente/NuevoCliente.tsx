@@ -41,7 +41,7 @@ export default function NuevoCliente() {
   return (
     <section className="nuevo-cliente">
 
-      <div className="nuevo-cliente-section">
+      <div className="nuevo-cliente-card">
 
         <div className="nuevo-cliente-header">
           <h1 className="nuevo-cliente-titulo">Nuevo cliente</h1>
