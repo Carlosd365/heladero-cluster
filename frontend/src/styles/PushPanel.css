@@ -1,0 +1,16 @@
+.push-panel {
+    position: relative;
+    height: 100%;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    overflow: hidden;
+    transition: width 0.35s ease;
+}
+
+.push-panel-content {
+    padding: 1rem;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}

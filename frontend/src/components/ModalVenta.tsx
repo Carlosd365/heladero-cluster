@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import "./ModalVenta.css";
+import "../styles/ModalVenta.css";
 
 export default function ModalVenta({
   open,

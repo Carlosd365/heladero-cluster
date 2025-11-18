@@ -1,13 +1,51 @@
 .nueva-venta {
-    display: grid;
-    gap: 0.75rem;
-    margin-top: 5rem;
+    width: 100%;
+    height: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+    overflow: auto;
 }
 
-.nueva-venta-header {
+.nv-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #8d425a;
+    text-align: center;
+}
+
+.nv-subtitle {
+    text-align: center;
+    color: #7a3c54;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.nv-card {
+    background: white;
+    padding: 1.5rem 1.7rem;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nv-card-title {
+    font-size: 1.2rem;
+    color: #8d425a;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.nv-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .nueva-venta-label {
@@ -42,7 +80,7 @@
 }
 
 .nueva-venta-productos {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .nueva-venta-tabla-contenedor {
@@ -53,14 +91,13 @@
     background-color: #fff;
 }
 
-/* Tabla principal */
 .nueva-venta-tabla {
-    width: 1100px;
+    width: 100%;
+    min-width: 900px;
     font-size: 0.9rem;
     border-collapse: collapse;
 }
 
-/* Encabezado de tabla */
 .nueva-venta-tabla thead {
     background-color: white;
     color: #8d425a;
@@ -73,27 +110,24 @@
     font-weight: 600;
 }
 
-/* Celdas */
 .nueva-venta-tabla td {
     padding: 0.75rem 1rem;
     text-align: center;
     border-top: 1px solid #e5e7eb;
 }
 
-/* Sin datos */
 .nueva-venta-sin-datos {
     padding: 1rem;
     text-align: center;
     color: #6b7280;
 }
 
-/* === FOOTER === */
 .nueva-venta-footer {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .nueva-venta-total {
@@ -102,7 +136,6 @@
     font-weight: 600;
 }
 
-/* === BOTÓN CONFIRMAR === */
 .nueva-venta-confirmar {
     padding: 0.4rem 0.9rem;
     border-radius: 6px;
@@ -132,4 +165,24 @@
 .nueva-venta-confirmar:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.nv-bottom-row {
+    margin-top: 0.8rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;    
+}
+
+.nv-total {
+    font-size: 1.1rem;
+    color: #8d425a;
+    font-weight: 600;
+}
+
+.nv-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;     
 }

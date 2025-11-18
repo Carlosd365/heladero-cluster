@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./Autocomplete.css";
+import "../styles/Autocomplete.css";
 
 export default function Autocomplete({
   fetcher,

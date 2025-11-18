@@ -1,18 +1,18 @@
 .mv-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: mvFadeIn 0.15s ease-out;
+  animation: mvFadeIn 0.25s ease-out;
   z-index: 2000;
 }
 
 .mv-modal {
   width: 450px;
-  max-height: 82vh;
+  max-height: 90vh;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid rgba(200, 90, 124, 0.25);

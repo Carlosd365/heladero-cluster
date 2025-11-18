@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import { repo} from "../../lib/repo";
 import ModalVenta from "../../components/ModalVenta";
 import "./Ventas.css";
@@ -84,7 +85,7 @@ export default function Ventas() {
     } catch (e: any) {
       if (!controller.signal.aborted) {
         console.error(e);
-        alert(e?.response?.data?.message ?? "No se pudieron cargar las ventas");
+        toast.error(e?.response?.data?.message ?? "No se pudieron cargar las ventas");
       }
     } finally {
       if (!controller.signal.aborted) setLoading(false);
@@ -129,7 +130,7 @@ export default function Ventas() {
       setProductos((prev) => ({ ...prev, [id_venta]: productosMap }));
     } catch (e) {
       console.error(e);
-      alert("No se pudo cargar el detalle de la venta");
+      toast.error("No se pudo cargar el detalle de la venta");
     }
   };
 
@@ -161,7 +162,7 @@ export default function Ventas() {
       setRows(rowsMapped);
     } catch (e) {
       console.error(e);
-      alert("Error al filtrar ventas.");
+      toast.error("Error al filtrar ventas");
     } finally {
       setLoading(false);
     }
@@ -197,7 +198,7 @@ export default function Ventas() {
           onClick={() => {
             setFrom("");
             setTo("");
-            fetchVentas(); // Recargar ventas sin filtros
+            fetchVentas();
           }}
           title="Reiniciar filtros"
         >
@@ -214,7 +215,7 @@ export default function Ventas() {
           <thead>
             <tr>
               <th></th>
-              <th>ID</th>
+              {/* <th>ID</th> */}
               <th>Fecha</th>
               <th>Cliente</th>
               <th className="text-right">Total</th>
@@ -230,7 +231,7 @@ export default function Ventas() {
                 onClick={() => toggleDetalle(r.id_venta)}
               >
                 <td></td>
-                <td>{r.id_venta}</td>
+                {/* <td>{r.id_venta}</td> */}
                 <td>{fmtDateGT(r.fecha)}</td>
                 <td>{r.cliente}</td>
                 <td className="text-right">{fmtCurrency(r.total ?? 0)}</td>
