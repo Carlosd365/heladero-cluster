@@ -32,7 +32,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           },
           style: {
             borderLeft: "5px solid #c85a7c",
-            background: "#fff6fa",
+            background: "#ffffffff",
             color: "#c85a7c",
           },
         },
