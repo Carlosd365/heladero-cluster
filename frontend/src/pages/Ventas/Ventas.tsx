@@ -276,6 +276,7 @@ export default function Ventas() {
               ? fmtDateGT(rows.find(x => x.id_venta === modalVentaId)!.fecha)
               : "Sin fecha"}
           </div>
+          <div><b>Total:</b> {rows.find(x => x.id_venta === modalVentaId)?.total}</div>
         </div>
 
         {productos[modalVentaId]
