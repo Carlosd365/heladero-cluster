@@ -15,7 +15,7 @@ export default function Shell() {
                     </div>
                 </nav>
             </header>
-            <main className="max-w-6xl mx-auto p-4 pt-20">
+            <main className="app-main">
                 <Outlet />
             </main>
         </div>

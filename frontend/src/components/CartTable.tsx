@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./CartTable.css";
+import "../styles/CartTable.css";
 
 export type CartItem = {
   id_producto: string;
@@ -120,9 +120,9 @@ export default function CartTable({
         </table>
       </div>
 
-      <div className="cart-subtotal">
+      {/* <div className="cart-subtotal">
         Subtotal: <span>Q {subtotal.toFixed(2)}</span>
-      </div>
+      </div> */}
     </div>
   );
 }

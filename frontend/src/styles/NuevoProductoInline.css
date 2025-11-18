@@ -1,0 +1,58 @@
+.nuevo-prod-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nuevo-prod-inline-titulo {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #8d425a;
+}
+
+.nuevo-prod-inline-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nuevo-prod-inline-form label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #8d425a;
+}
+
+.nuevo-prod-inline-form input {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.nuevo-prod-inline-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nuevo-prod-inline-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nuevo-prod-inline-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.nuevo-prod-inline-botones button {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    cursor: pointer;
+    color: #C85A7C;
+}

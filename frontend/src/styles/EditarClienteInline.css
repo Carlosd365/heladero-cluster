@@ -1,0 +1,46 @@
+.editar-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.editar-inline-titulo {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #8d425a;
+}
+
+.editar-inline-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.editar-inline-form label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #8d425a;
+}
+
+.editar-inline-form input {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.editar-inline-botones {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.editar-inline-botones button {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    color: #C85A7C;
+    background: white;
+}

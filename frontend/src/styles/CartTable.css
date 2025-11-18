@@ -3,7 +3,6 @@
   gap: 0.75rem;
 }
 
-/* === Contenedor principal de la tabla === */
 .cart-table-contenedor {
   overflow: auto;
   border: 1px solid #d1d5db;
@@ -11,7 +10,6 @@
   background-color: #fff;
 }
 
-/* === Tabla === */
 .cart-tabla {
   width: 100%;
   min-width: 800px;
@@ -37,7 +35,6 @@
   border-top: 1px solid #e5e7eb;
 }
 
-/* === Campo de cantidad === */
 .cart-input {
   width: 100%;
   border: 1px solid #d1d5db;
@@ -47,7 +44,6 @@
   text-align: center;
 }
 
-/* === Botón Quitar === */
 .cart-remove button {
   color: #c85a7c;
   background: none;
@@ -62,20 +58,19 @@
   text-decoration: underline;
 }
 
-/* === Fila vacía === */
 .cart-empty {
   padding: 1rem;
   text-align: center;
   color: #6b7280;
 }
 
-/* === Subtotal === */
 .cart-subtotal {
   text-align: right;
   font-size: 1rem;
   color: #8d425a;
   font-weight: 600;
 }
+
 .cart-subtotal span {
   font-weight: 700;
 }

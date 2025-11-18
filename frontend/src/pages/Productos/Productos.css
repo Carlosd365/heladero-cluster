@@ -1,13 +1,29 @@
+.productos-layout {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease;
+}
+
 .productos {
-    display: grid;
-    gap: 0.75rem;
-    margin-top: 5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1rem;
+    height: 100%;
+}
+
+.productos.sidebar-abierto {
+    transition: margin-right 0.35s ease;
 }
 
 .productos-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    flex-shrink: 0;
 }
 
 .productos-input {
@@ -37,24 +53,21 @@
     transform: translateY(-1px);
 }
 
-.productos-nuevo:active {
-    background: white;
-    color: #C85A7C;
-    box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
-}
-
 .productos-tabla-contenedor {
-    margin-top: 1rem;
+    flex: 1; 
     overflow: auto;
+    overflow-x: hidden;
+    margin-top: 1rem;
     border: 1px solid #d1d5db;
     border-radius: 0.8rem;
     background-color: #fff;
 }
 
 .productos-tabla {
-    width: 1100px;
+    min-width: 100%; 
     font-size: 0.9rem;
     border-collapse: collapse;
+    width: 1100px;
 }
 
 .productos-tabla thead {
@@ -89,4 +102,43 @@
     padding: 1rem;
     text-align: center;
     color: #6b7280;
+}
+
+.productos-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-editar,
+.btn-eliminar {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.btn-editar {
+    color: #374151;
+    box-shadow: 0 0 0 1px rgba(107, 114, 128, 0.15);
+}
+
+.btn-eliminar {
+    color: #b91c1c;
+    box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.15);
+}
+
+.btn-editar:hover {
+    background-color: #f9fafb;
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.2);
+    transform: translateY(-1px);
+}
+
+.btn-eliminar:hover {
+    background-color: #fef2f2;
+    box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.2);
+    transform: translateY(-1px);
 }

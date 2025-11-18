@@ -57,3 +57,12 @@
     font-weight: 600;
     box-shadow: 0 0 0 2px rgba(200, 90, 124, 0.2);
 }
+
+.app-main {
+    margin-top: 4rem;
+    height: calc(100vh - 4rem);
+    display: flex;
+    overflow: hidden;   
+    width: 100%;
+    padding: 1rem;      
+}
