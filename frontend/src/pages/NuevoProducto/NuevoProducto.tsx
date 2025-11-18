@@ -42,7 +42,7 @@ export default function NuevoProducto() {
   return (
     <section className="nuevo-producto">
 
-      <div className="nuevo-producto-section">
+      <div className="nuevo-producto-card">
 
         <div className="nuevo-producto-header">
           <h1 className="nuevo-producto-titulo">Nuevo producto</h1>
